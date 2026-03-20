@@ -1,0 +1,13 @@
+{
+  "name": "rigor-resume",
+  "version": "1.0.0",
+  "description": "ATS Resume Analyzer — rigor.design",
+  "scripts": {
+    "dev": "vercel dev",
+    "deploy": "vercel --prod"
+  },
+  "dependencies": {
+    "firebase-admin": "^12.0.0",
+    "@anthropic-ai/sdk": "^0.24.0"
+  }
+}

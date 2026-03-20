@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Rigor Resume — ATS Score Your Resume</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/styles.css" />
+  <!-- SEO & Social -->
+  <meta name="description" content="Score your resume against any job description. Get ATS compatibility score, missing keywords, and actionable fixes in 60 seconds." />
+  <meta name="robots" content="index, follow" />
+  <link rel="canonical" href="https://rigor.design/resume" />
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://rigor.design/resume" />
+  <meta property="og:title" content="Rigor Resume — Free ATS Resume Analyzer" />
+  <meta property="og:description" content="Score your resume against any job description. Get ATS compatibility score, missing keywords, and actionable fixes in 60 seconds." />
+  <meta property="og:image" content="https://rigor.design/og-image.png" />
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Rigor Resume — Free ATS Resume Analyzer" />
+  <meta name="twitter:description" content="Score your resume against any job description. Get ATS compatibility score, missing keywords, and actionable fixes in 60 seconds." />
+  <meta name="twitter:image" content="https://rigor.design/og-image.png" />
+
+  <!-- Theme color -->
+  <link rel="manifest" href="/manifest.json" />
+  <meta name="theme-color" content="#1E3A5F" />
+</head>
+<body>
+  <a href="#main-content" class="skip-link">Skip to main content</a>
+    <nav class="nav" aria-label="Main navigation">
+    <a href="/" class="nav-brand">rigor<span>.</span>design</a>
+    <div class="nav-links">
+      <span class="plan-badge plan-badge-pro hidden" id="plan-badge"></span>
+      <a href="#" id="nav-login" class="nav-link">Sign In</a>
+      <button class="btn-upgrade-nav" id="nav-upgrade" class="btn-upgrade-nav nav-upgrade-hidden">⚡ Upgrade</button>
+      <button class="btn-icon" id="nav-manage" class="btn-icon nav-manage-hidden">Manage Plan</button>
+      <a href="#" id="nav-signup" class="btn-nav">Get Started</a>
+    </div>
+  </nav>
+
+  <!-- Auth Modal -->
+  <div class="modal-overlay" id="auth-modal" role="dialog" aria-modal="true" aria-labelledby="auth-modal-title">
+    <div class="modal">
+      <button class="modal-close" id="modal-close" aria-label="Close dialog">&times;</button>
+      <div class="modal-tabs">
+        <button class="tab-btn active" data-tab="login">Sign In</button>
+        <button class="tab-btn" data-tab="signup">Sign Up</button>
+      </div>
+      <div class="tab-content" id="tab-login">
+        <input type="email" class="input" id="login-email" placeholder="Email" />
+        <input type="password" class="input" id="login-password" placeholder="Password" />
+        <button class="btn-primary full" id="btn-login" aria-label="Sign in to your account">Sign In</button>
+      </div>
+      <div class="tab-content hidden" id="tab-signup">
+        <input type="text" class="input" id="signup-name" placeholder="Full Name" />
+        <input type="email" class="input" id="signup-email" placeholder="Email" />
+        <input type="password" class="input" id="signup-password" placeholder="Password" />
+        <button class="btn-primary full" id="btn-signup" aria-label="Create a new account">Create Account</button>
+      </div>
+      <p class="auth-error hidden" id="auth-error"></p>
+    </div>
+  </div>
+
+  <!-- Hero -->
+  <section class="hero" id="main-content">
+    <div class="hero-badge">AI-Powered Resume Analysis</div>
+    <h1 class="hero-title">Get Your Resume<br /><em>ATS-Ready</em></h1>
+    <p class="hero-sub">Upload your resume and job description. We score compatibility, surface gaps, and give you actionable fixes in seconds.</p>
+    <button class="btn-primary hero-cta" id="hero-cta">Analyze My Resume</button>
+    <div class="hero-stats">
+      <div class="stat"><strong>94%</strong><span>ATS Pass Rate</span></div>
+      <div class="stat"><strong>3x</strong><span>More Interviews</span></div>
+      <div class="stat"><strong>60s</strong><span>Analysis Time</span></div>
+    </div>
+  </section>
+
+  <!-- Main Tool -->
+  <section class="tool-section" aria-label="Main tool" id="tool">
+    <div id="usage-meter-container"></div>
+    <div class="tool-container">
+      <div class="tool-panel">
+        <div class="panel-header">
+          <span class="panel-num">01</span>
+          <h2>Upload Resume</h2>
+        </div>
+        <div class="drop-zone" id="resume-drop">
+          <div class="drop-icon">📄</div>
+          <p>Drop your resume here or <label for="resume-file" class="upload-label">browse</label></p>
+          <input type="file" id="resume-file" accept=".pdf,.doc,.docx,.txt" hidden />
+          <span class="drop-hint">PDF, DOC, DOCX or TXT</span>
+        </div>
+        <textarea class="input textarea" id="resume-text" placeholder="Or paste your resume text here..."></textarea>
+      </div>
+
+      <div class="tool-panel">
+        <div class="panel-header">
+          <span class="panel-num">02</span>
+          <h2>Job Description</h2>
+        </div>
+        <textarea class="input textarea tall" id="job-description" placeholder="Paste the job description you're applying to..."></textarea>
+      </div>
+
+      <div class="tool-actions">
+        <button class="btn-primary large" id="btn-analyze" aria-label="Analyze resume against job description">
+          <span class="btn-text">Analyze Resume</span>
+          <span class="btn-loader hidden">Analyzing...</span>
+        </button>
+      </div>
+
+      <!-- Results -->
+      <div class="results hidden" id="results">
+        <div class="score-card">
+          <div class="score-ring">
+            <svg viewBox="0 0 120 120">
+              <circle class="ring-bg" cx="60" cy="60" r="54" />
+              <circle class="ring-fill" cx="60" cy="60" r="54" id="score-ring-fill" />
+            </svg>
+            <div class="score-value" id="score-value">0</div>
+          </div>
+          <div class="score-meta">
+            <h3 id="score-label">ATS Score</h3>
+            <p id="score-desc">Your resume compatibility with this job</p>
+          </div>
+        </div>
+
+        <div class="results-grid">
+          <div class="result-block" id="keywords-block">
+            <h4>Missing Keywords</h4>
+            <div class="tags" id="missing-keywords"></div>
+          </div>
+          <div class="result-block" id="strengths-block">
+            <h4>Strengths</h4>
+            <ul id="strengths-list"></ul>
+          </div>
+          <div class="result-block wide" id="fixes-block">
+            <h4>Recommended Fixes</h4>
+            <ul id="fixes-list"></ul>
+          </div>
+        </div>
+
+        <button class="btn-secondary" id="btn-save" aria-label="Save result">Save Analysis</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- History (logged in) -->
+  <section class="history-section hidden" id="history-section">
+    <div class="section-header">
+      <h2>Your Analyses</h2>
+    </div>
+    <div class="history-grid" id="history-grid"></div>
+  </section>
+
+  <footer class="footer">
+    <p>© 2025 rigor.design — Built for ambitious job seekers</p>
+  </footer>
+
+  <script type="module" src="js/app.js"></script>
+
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js').catch(() => {});
+      });
+    }
+  </script>
+</body>
+</html>
