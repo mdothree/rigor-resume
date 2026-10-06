@@ -1,6 +1,6 @@
 "use strict";
 
-const CACHE_NAME = "rigor-resume-v1";
+const CACHE_NAME = "rigor-resume-v2";
 const STATIC_ASSETS = [
   "/",
   "/index.html",
@@ -47,16 +47,20 @@ self.addEventListener("fetch", event => {
     return; // fall through to network
   }
 
+  // Only handle same-origin requests.
+  if (url.origin !== self.location.origin) return;
+
+  // Network-first: always try the latest deployed file, fall back to the cache
+  // when offline. (Cache-first kept serving stale, broken JS after deploys.)
   event.respondWith(
-    caches.match(event.request).then(cached => {
-      if (cached) return cached;
-      return fetch(event.request).then(res => {
-        if (res.ok && res.type === "basic") {
-          const clone = res.clone();
-          caches.open(CACHE_NAME).then(c => c.put(event.request, clone));
-        }
-        return res;
-      }).catch(() => cached || new Response("Offline", { status: 503 }));
-    })
+    fetch(event.request).then(res => {
+      if (res.ok && res.type === "basic") {
+        const clone = res.clone();
+        caches.open(CACHE_NAME).then(c => c.put(event.request, clone));
+      }
+      return res;
+    }).catch(() =>
+      caches.match(event.request).then(cached => cached || new Response("Offline", { status: 503 }))
+    )
   );
 });

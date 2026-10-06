@@ -7,6 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='%231a4fa3'/><text x='16' y='23' font-family='serif' font-weight='700' font-size='16' fill='white'>R</text></svg>">
   <link rel="stylesheet" href="css/styles.css" />
   <!-- SEO & Social -->
   <meta name="description" content="Score your resume against any job description. Get ATS compatibility score, missing keywords, and actionable fixes in 60 seconds." />
@@ -18,13 +19,16 @@
   <meta property="og:url" content="https://rigor.design/resume" />
   <meta property="og:title" content="Rigor Resume — Free ATS Resume Analyzer" />
   <meta property="og:description" content="Score your resume against any job description. Get ATS compatibility score, missing keywords, and actionable fixes in 60 seconds." />
-  <meta property="og:image" content="https://rigor.design/og-image.png" />
+  <meta property="og:image" content="./og-image.jpg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:locale" content="en_US" />
 
   <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="Rigor Resume — Free ATS Resume Analyzer" />
   <meta name="twitter:description" content="Score your resume against any job description. Get ATS compatibility score, missing keywords, and actionable fixes in 60 seconds." />
-  <meta name="twitter:image" content="https://rigor.design/og-image.png" />
+  <meta name="twitter:image" content="./og-image.jpg" />
 
   <!-- Theme color -->
   <link rel="manifest" href="/manifest.json" />
@@ -37,14 +41,14 @@
     <div class="nav-links">
       <span class="plan-badge plan-badge-pro hidden" id="plan-badge"></span>
       <a href="#" id="nav-login" class="nav-link">Sign In</a>
-      <button class="btn-upgrade-nav" id="nav-upgrade" class="btn-upgrade-nav nav-upgrade-hidden">⚡ Upgrade</button>
-      <button class="btn-icon" id="nav-manage" class="btn-icon nav-manage-hidden">Manage Plan</button>
+      <a href="https://buy.stripe.com/4gM3cu7p6dux8Ko1Fx8k804" class="btn-upgrade-nav" id="nav-upgrade">⚡ Upgrade to Pro - $9.99/mo</a>
+      <button class="btn-icon nav-manage-hidden" id="nav-manage">Manage Plan</button>
       <a href="#" id="nav-signup" class="btn-nav">Get Started</a>
     </div>
   </nav>
 
   <!-- Auth Modal -->
-  <div class="modal-overlay" id="auth-modal" role="dialog" aria-modal="true" aria-labelledby="auth-modal-title">
+  <div class="modal-overlay hidden" id="auth-modal" role="dialog" aria-modal="true" aria-label="Sign in or create an account">
     <div class="modal">
       <button class="modal-close" id="modal-close" aria-label="Close dialog">&times;</button>
       <div class="modal-tabs">
@@ -90,11 +94,12 @@
         </div>
         <div class="drop-zone" id="resume-drop">
           <div class="drop-icon">📄</div>
-          <p>Drop your resume here or <label for="resume-file" class="upload-label">browse</label></p>
-          <input type="file" id="resume-file" accept=".pdf,.doc,.docx,.txt" hidden />
-          <span class="drop-hint">PDF, DOC, DOCX or TXT</span>
+          <p>Drop a .txt resume here or <label for="resume-file" class="upload-label">browse</label></p>
+          <input type="file" id="resume-file" accept=".txt,text/plain" hidden />
+          <span class="drop-hint">Plain text (.txt) only. For PDF or Word, copy the text and paste it below.</span>
         </div>
-        <textarea class="input textarea" id="resume-text" placeholder="Or paste your resume text here..."></textarea>
+        <textarea class="input textarea" id="resume-text" placeholder="Or paste your resume text here..." aria-describedby="resume-count"></textarea>
+        <p class="input-note" id="resume-count" aria-live="polite"></p>
       </div>
 
       <div class="tool-panel">
@@ -102,7 +107,8 @@
           <span class="panel-num">02</span>
           <h2>Job Description</h2>
         </div>
-        <textarea class="input textarea tall" id="job-description" placeholder="Paste the job description you're applying to..."></textarea>
+        <textarea class="input textarea tall" id="job-description" placeholder="Paste the job description you're applying to..." aria-describedby="jd-count"></textarea>
+        <p class="input-note" id="jd-count" aria-live="polite"></p>
       </div>
 
       <div class="tool-actions">
@@ -144,6 +150,12 @@
         </div>
 
         <button class="btn-secondary" id="btn-save" aria-label="Save result">Save Analysis</button>
+
+        <div class="premium-cta" style="margin-top: 2rem; padding: 1.5rem; background: linear-gradient(135deg, #1a4fa3 0%, #2563eb 100%); border-radius: 12px; text-align: center;">
+          <h4 style="color: white; margin-bottom: 0.5rem;">⚡ Unlimited ATS Analyses</h4>
+          <p style="color: rgba(255,255,255,0.9); margin-bottom: 1rem; font-size: 0.9rem;">Get unlimited scans, history tracking, and all Rigor career tools</p>
+          <a href="https://buy.stripe.com/4gM3cu7p6dux8Ko1Fx8k804" class="btn-primary" style="background: white; color: #1a4fa3; display: inline-block; padding: 0.75rem 2rem; border-radius: 8px; text-decoration: none; font-weight: 600;">Upgrade to Pro - $9.99/mo</a>
+        </div>
       </div>
     </div>
   </section>
@@ -157,17 +169,17 @@
   </section>
 
   <footer class="footer">
+    <nav class="footer-tools" aria-label="Other rigor.design tools"><a href="https://rigor.design">All tools</a> <a href="https://cover.rigor.design">Cover Letters</a> <a href="https://linkedin.rigor.design">LinkedIn Optimizer</a> <a href="https://interview.rigor.design">Interview Coach</a> <a href="https://networking.rigor.design">Networking Emails</a> <a href="https://portfolio.rigor.design">Portfolio Review</a> <a href="https://salary.rigor.design">Salary Negotiation</a></nav>
     <p>© 2025 rigor.design — Built for ambitious job seekers</p>
   </footer>
 
-  <script type="module" src="js/app.js"></script>
+  <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
 
-  <script>
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => {
-        navigator.serviceWorker.register('/sw.js').catch(() => {});
-      });
-    }
-  </script>
+    <script src="js/app.js" type="module"></script>
+
+  <!-- Service worker registration lives in js/app.js (inline scripts are blocked by the CSP) -->
 </body>
 </html>

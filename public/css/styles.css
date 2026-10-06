@@ -825,3 +825,76 @@ body {
   --gray-700:    #D1D5DB;
   --text:        #F9FAFB;
 }
+
+/* ============================================================
+   UI review fixes (2026-10)
+   ============================================================ */
+
+/* Light-mode muted text: #9E9A90 was 2.6:1 on the off-white background.
+   #6E6A61 is 5.0:1 on #F8F7F4 and 5.4:1 on #FFF. The dark-mode values below are unchanged. */
+:root { --gray-400: #6E6A61; }
+
+/* Compact hero so the tool sits closer to the fold */
+.hero { padding: 4.5rem 2rem 3.5rem; }
+.tool-section { padding-top: 3rem; }
+
+/* Input character counters / truncation notices */
+.input-note { font-size: .8rem; color: var(--gray-400); margin-top: .4rem; }
+.input-note-warn { color: #B45309; font-weight: 500; }
+.result-note {
+  margin: 0 0 1rem; padding: .75rem 1rem; border-radius: 10px;
+  background: #FFF3CD; color: #7D5A00; font-size: .9rem; font-weight: 500;
+}
+.empty-note { color: var(--gray-400); font-size: .9rem; }
+
+/* Inline error panel (helpers.js showToolError) */
+.tool-error {
+  margin-top: 1.5rem; padding: 1.25rem 1.5rem; border-radius: 12px;
+  background: #FEF2F2; border: 1px solid #FCA5A5; color: #7F1D1D;
+}
+.tool-error.hidden { display: none; }
+.tool-error-title { font-weight: 700; margin-bottom: .25rem; }
+.tool-error-msg { margin-bottom: .25rem; word-break: break-word; }
+.tool-error-note { font-size: .85rem; opacity: .85; }
+.tool-error-actions { display: flex; gap: .75rem; flex-wrap: wrap; margin-top: .75rem; }
+.tool-error-actions:empty { display: none; }
+
+/* Interview summary breakdown (was inline styles) */
+.breakdown-row { display: flex; justify-content: space-between; padding: .4rem 0; border-bottom: 1px solid var(--gray-200); }
+.breakdown-val { font-weight: 600; }
+.bd-strong { color: #166534; }
+.bd-good   { color: var(--navy); }
+.bd-weak   { color: #9A3412; }
+.bd-none   { color: var(--gray-400); font-weight: 400; }
+
+/* Mobile nav: the links row didn't wrap and overflowed at phone widths */
+@media (max-width: 640px) {
+  .nav { flex-wrap: wrap; gap: .5rem; padding: .75rem 1rem; }
+  .nav-links { flex-wrap: wrap; justify-content: flex-end; gap: .5rem .9rem; }
+  .btn-upgrade-nav { font-size: .8rem; padding: .4rem .75rem; }
+  .hero { padding: 3rem 1.25rem 2.5rem; }
+}
+
+/* Dark mode: --white turns into a dark surface, so text on navy needs a literal
+   white, and navy headings on dark cards need a light colour. */
+@media (prefers-color-scheme: dark) {
+  .hero, .btn-nav, .score-card, .question-card,
+  .tone-option input:checked + span { color: #FFFFFF; }
+  .nav-brand, .nav-link:hover, .tab-btn.active, .panel-header h2, .upload-label,
+  .section-header h2, .history-title, .result-toolbar h3, .answer-toolbar,
+  .complete-card h2, .bd-good { color: var(--text); }
+  .result-note { background: #3A2E05; color: #FDE68A; }
+  .input-note-warn { color: #FBBF24; }
+  .tool-error { background: #2A1215; border-color: #7F1D1D; color: #FECACA; }
+  .bd-strong { color: #4ADE80; }
+  .bd-weak { color: #FDBA74; }
+}
+
+/* Footer cross-links to the other rigor tools */
+.footer-tools { display: flex; flex-wrap: wrap; justify-content: center; gap: .5rem 1.25rem; margin-bottom: .75rem; }
+.footer-tools a { color: var(--navy); text-decoration: none; font-weight: 500; }
+.footer-tools a:hover { text-decoration: underline; }
+@media (prefers-color-scheme: dark) { .footer-tools a { color: var(--gold); } }
+
+/* Keep scrolled-to panels clear of the sticky nav */
+#tool, .question-card, .session-complete, .setup-panel, .results, .result-panel, .feedback-panel, .tool-error { scroll-margin-top: 5rem; }

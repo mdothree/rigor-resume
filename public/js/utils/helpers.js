@@ -255,3 +255,84 @@ export function hideSkeleton(containerId) {
     if (skeleton) skeleton.remove();
   }
 }
+
+// ─── Auth modal / nav wiring ─────────────────────────────────────────────────
+export function openAuthModal(tab = "login") {
+  const modal = document.getElementById("auth-modal");
+  if (!modal) return;
+  document.querySelector(`.tab-btn[data-tab="${tab}"]`)?.click();
+  document.getElementById("auth-error")?.classList.add("hidden");
+  modal.classList.remove("hidden");
+  modal.querySelector(`#tab-${tab} input`)?.focus();
+}
+
+/**
+ * Wires the nav "Sign In / Sign Out" link and "Get Started" button.
+ * @param {object} authService - must expose signOut()
+ * @param {() => any} getUser  - returns the current user (or null)
+ */
+export function wireAuthNav(authService, getUser) {
+  document.getElementById("nav-login")?.addEventListener("click", async e => {
+    e.preventDefault();
+    if (getUser()) {
+      try { await authService.signOut(); } catch { /* onAuthChanged updates the nav */ }
+    } else {
+      openAuthModal("login");
+    }
+  });
+  document.getElementById("nav-signup")?.addEventListener("click", e => {
+    e.preventDefault();
+    openAuthModal("signup");
+  });
+}
+
+// ─── Inline error state (with retry) ─────────────────────────────────────────
+/**
+ * Shows an honest error panel right after `.tool-actions` and scrolls to it.
+ * 401s get a sign-in prompt instead of a generic message.
+ */
+export function showToolError(err, onRetry) {
+  const anchor = document.querySelector(".tool-actions");
+  if (!anchor) return;
+  let box = document.getElementById("tool-error");
+  if (!box) {
+    box = document.createElement("div");
+    box.id = "tool-error";
+    box.className = "tool-error";
+    box.setAttribute("role", "alert");
+    anchor.insertAdjacentElement("afterend", box);
+  }
+  const needsAuth = err?.status === 401;
+  const msg = needsAuth
+    ? "Please sign in to use this tool."
+    : (err?.message || "Something went wrong.");
+  box.innerHTML = `<p class="tool-error-title">${needsAuth ? "Sign-in required" : "We couldn't generate a result"}</p>
+    <p class="tool-error-msg">${escapeHtml(msg)}</p>
+    <p class="tool-error-note">No results were generated, so nothing is shown below.</p>
+    <div class="tool-error-actions"></div>`;
+  const actions = box.querySelector(".tool-error-actions");
+  if (needsAuth) {
+    const b = document.createElement("button");
+    b.className = "btn-primary"; b.type = "button"; b.textContent = "Sign In";
+    b.addEventListener("click", () => openAuthModal("login"));
+    actions.appendChild(b);
+  }
+  if (onRetry) {
+    const r = document.createElement("button");
+    r.className = "btn-secondary"; r.type = "button"; r.textContent = "Try again";
+    r.addEventListener("click", onRetry);
+    actions.appendChild(r);
+  }
+  box.classList.remove("hidden");
+  box.scrollIntoView({ behavior: "smooth", block: "center" });
+}
+
+export function clearToolError() {
+  document.getElementById("tool-error")?.classList.add("hidden");
+}
+
+/** Escaped <li> list from an array (non-arrays become a single item). */
+export function listItems(arr) {
+  const items = Array.isArray(arr) ? arr : (arr ? [arr] : []);
+  return items.map(x => `<li>${escapeHtml(x)}</li>`).join("");
+}
