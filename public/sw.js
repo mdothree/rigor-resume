@@ -1,6 +1,6 @@
 "use strict";
 
-const CACHE_NAME = "rigor-resume-v2";
+const CACHE_NAME = "rigor-resume-v3";
 const STATIC_ASSETS = [
   "/",
   "/index.html",
