@@ -6,7 +6,7 @@
 
 import {
   PLANS, getSubscription, onSubscriptionChange,
-  isPro, checkLimit, trackUsage,
+  isPro, checkLimit,
   mountEmbeddedCheckout, openCustomerPortal
 } from "./paymentService.js";
 
@@ -40,7 +40,9 @@ export async function gate(action, onAllowed, onBlocked) {
   const { allowed, reason, used, limit: lim } = await checkLimit(_userId, action, limit);
 
   if (allowed) {
-    await trackUsage(_userId, action);
+    // Usage is counted server-side only (the API increments usage/{uid}_{month}
+    // after a successful AI call; firestore.rules deny client writes to usage).
+    // Counting here too double-counted and charged quota for failed calls.
     onAllowed();
   } else {
     if (reason === "login") { showAuthPrompt(); return; }
@@ -182,12 +184,13 @@ export async function renderUsageMeter(containerId, action) {
   if (!container || !_userId) return;
   const plan = _subscription.plan || "free";
   const limit = PLANS[plan]?.limits?.[action] ?? 3;
-  if (limit === Infinity) { container.innerHTML = `<span class="usage-unlimited">✓ Unlimited ${action}s</span>`; return; }
+  const noun = action.endsWith("s") ? action : `${action}s`; // "analyses", not "analysess"
+  if (limit === Infinity) { container.innerHTML = `<span class="usage-unlimited">✓ Unlimited ${noun}</span>`; return; }
   const { used } = await checkLimit(_userId, action, limit);
   const pct = Math.min(100, (used / limit) * 100);
   container.innerHTML = `
     <div class="usage-meter">
-      <div class="usage-label"><span>${used} / ${limit} ${action}s used</span><button class="usage-upgrade" onclick="window._showPricing?.()">Upgrade</button></div>
+      <div class="usage-label"><span>${used} / ${limit} ${noun} used</span><button class="usage-upgrade" onclick="window._showPricing?.()">Upgrade</button></div>
       <div class="usage-bar"><div class="usage-fill ${pct > 80 ? 'warning' : ''}" style="width:${pct}%"></div></div>
     </div>`;
   window._showPricing = () => showPricingModal("pro");

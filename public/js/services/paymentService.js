@@ -1,4 +1,4 @@
-import { STRIPE_KEY, STRIPE_PRO_PRICE_ID, STRIPE_TEAM_PRICE_ID } from "../config/env.js";
+import { STRIPE_KEY, STRIPE_PRO_PRICE_ID, STRIPE_TEAM_PRICE_ID, apiFetch } from "../config/env.js";
 
 /**
  * paymentService.js
@@ -115,14 +115,10 @@ export async function createCheckoutSession(userId, priceId, successUrl, cancelU
 export async function mountEmbeddedCheckout(containerId, priceId, userId) {
   const stripe = await getStripe();
 
-  // Get client secret from server
-  const res = await fetch("/api/payment/create-embedded-session", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ priceId, userId })
-  });
-  if (!res.ok) throw new Error("Failed to initialize checkout");
-  const { clientSecret } = await res.json();
+  // Get client secret from the API. apiFetch adds API_URL + the Firebase ID token;
+  // the server derives the user from the token (the userId arg is no longer sent).
+  const { clientSecret } = await apiFetch("/api/payment/create-embedded-session", { priceId });
+  if (!clientSecret) throw new Error("Failed to initialize checkout");
 
   const checkout = await stripe.initEmbeddedCheckout({ clientSecret });
   checkout.mount(`#${containerId}`);
@@ -131,12 +127,9 @@ export async function mountEmbeddedCheckout(containerId, priceId, userId) {
 
 // ─── Customer portal ──────────────────────────────────────────────────────────
 export async function openCustomerPortal(userId) {
-  const res = await fetch("/api/payment/portal", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ userId })
-  });
-  const { url } = await res.json();
+  // Server derives the user from the Firebase ID token (apiFetch attaches it).
+  const { url } = await apiFetch("/api/payment/portal", {});
+  if (!url) throw new Error("Could not open the billing portal");
   window.location.href = url;
 }
 
