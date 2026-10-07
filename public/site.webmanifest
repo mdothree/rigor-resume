@@ -1,10 +1,10 @@
 {
-  "name": "Rigor — Career Tools",
+  "name": "Rigor Resume — Resume Analyzer",
   "short_name": "Rigor",
-  "description": "AI-powered career tools: resume analyzer, cover letter, LinkedIn optimizer, and more.",
+  "description": "Rigor Resume Analyzer, part of the Rigor career tools.",
   "start_url": "/",
+  "scope": "/",
   "display": "standalone",
-  "orientation": "portrait-primary",
   "theme_color": "#1E3A5F",
   "background_color": "#F8F7F4",
   "icons": [
@@ -24,10 +24,5 @@
       "type": "image/png",
       "purpose": "maskable"
     }
-  ],
-  "categories": [
-    "utilities",
-    "productivity"
-  ],
-  "screenshots": []
+  ]
 }

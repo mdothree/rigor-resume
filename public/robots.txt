@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://resume.rigor.design/sitemap.xml
