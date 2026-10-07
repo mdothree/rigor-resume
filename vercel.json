@@ -1,59 +1,5 @@
 {
   "version": 2,
-  "builds": [
-    {
-      "src": "public/**",
-      "use": "@vercel/static"
-    },
-    {
-      "src": "api/**/*.js",
-      "use": "@vercel/node"
-    }
-  ],
-  "routes": [
-    {
-      "src": "/api/(.*)",
-      "dest": "/api/$1"
-    },
-    {
-      "src": "/success",
-      "dest": "/public/success.html"
-    },
-    {
-      "src": "/cancel",
-      "dest": "/public/cancel.html"
-    },
-    {
-      "src": "/(.*)\\.html",
-      "dest": "/public/$1.html"
-    },
-    {
-      "src": "/(.*)\\.css",
-      "dest": "/public/$1.css"
-    },
-    {
-      "src": "/(.*)\\.js",
-      "dest": "/public/$1.js"
-    },
-    {
-      "src": "/(.*)\\.png",
-      "dest": "/public/$1.png"
-    },
-    {
-      "src": "/(.*)\\.ico",
-      "dest": "/public/$1.ico"
-    },
-    {
-      "src": "/(.*)",
-      "dest": "/public/$1",
-      "status": 200
-    },
-    {
-      "src": "/404",
-      "dest": "/public/404.html",
-      "status": 404
-    }
-  ],
   "headers": [
     {
       "source": "/(.*)",
@@ -90,5 +36,6 @@
     }
   ],
   "cleanUrls": true,
-  "trailingSlash": false
+  "trailingSlash": false,
+  "outputDirectory": "public"
 }
