@@ -8,7 +8,7 @@ import { STRIPE_KEY, STRIPE_PRO_PRICE_ID, STRIPE_TEAM_PRICE_ID, apiFetch } from 
 
 import { auth, db } from "../config/firebase.js";
 import {
-  doc, getDoc, setDoc, onSnapshot, collection, addDoc, serverTimestamp
+  doc, getDoc, onSnapshot
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
 // ─── Plan config (update keys per project) ──────────────────────────────────
@@ -54,11 +54,18 @@ function loadScript(src) {
 }
 
 // ─── Subscription state ───────────────────────────────────────────────────────
+// Same rule as the API (api/lib/quota.js): a paid plan only counts while the
+// Stripe status is active/trialing (past_due/canceled fall back to free limits).
+function normalizeSub(data) {
+  if (!data) return { plan: "free", status: "none" };
+  const active = data.status === "active" || data.status === "trialing";
+  return active ? data : { ...data, plan: "free" };
+}
+
 export async function getSubscription(userId) {
   try {
     const snap = await getDoc(doc(db, "subscriptions", userId));
-    if (!snap.exists()) return { plan: "free", status: "none" };
-    return snap.data();
+    return normalizeSub(snap.exists() ? snap.data() : null);
   } catch {
     return { plan: "free", status: "none" };
   }
@@ -66,7 +73,7 @@ export async function getSubscription(userId) {
 
 export function onSubscriptionChange(userId, callback) {
   return onSnapshot(doc(db, "subscriptions", userId), snap => {
-    callback(snap.exists() ? snap.data() : { plan: "free", status: "none" });
+    callback(normalizeSub(snap.exists() ? snap.data() : null));
   });
 }
 
@@ -75,17 +82,9 @@ export async function isPro(userId) {
   return sub.plan === "pro" || sub.plan === "team";
 }
 
-// ─── Usage tracking ───────────────────────────────────────────────────────────
-export async function trackUsage(userId, action) {
-  const month = new Date().toISOString().slice(0, 7); // "2025-01"
-  const ref = doc(db, "usage", `${userId}_${month}`);
-  const snap = await getDoc(ref);
-  const current = snap.exists() ? snap.data() : {};
-  const count = (current[action] || 0) + 1;
-  await setDoc(ref, { ...current, [action]: count, userId, month }, { merge: true });
-  return count;
-}
-
+// ─── Usage (read-only) ─────────────────────────────────────────────────────────
+// Usage is reserved/incremented only by the rigor API (api/lib/quota.js);
+// firestore.rules deny client writes to usage/.
 export async function getUsage(userId, action) {
   const month = new Date().toISOString().slice(0, 7);
   const snap = await getDoc(doc(db, "usage", `${userId}_${month}`));
@@ -98,17 +97,6 @@ export async function checkLimit(userId, action, limit) {
   const used = await getUsage(userId, action);
   if (used >= limit) return { allowed: false, reason: "limit", used, limit };
   return { allowed: true, used, limit };
-}
-
-// ─── Stripe Checkout (server-side session) ────────────────────────────────────
-export async function createCheckoutSession(userId, priceId, successUrl, cancelUrl) {
-  const res = await fetch("/api/payment/create-session", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ userId, priceId, successUrl, cancelUrl })
-  });
-  if (!res.ok) throw new Error("Failed to create checkout session");
-  return res.json(); // { sessionId, url }
 }
 
 // ─── Stripe Embedded Checkout (Payment Element) ───────────────────────────────
@@ -133,9 +121,3 @@ export async function openCustomerPortal(userId) {
   window.location.href = url;
 }
 
-// ─── Log payment event ────────────────────────────────────────────────────────
-export async function logPaymentEvent(userId, event) {
-  await addDoc(collection(db, "payment_events"), {
-    userId, ...event, createdAt: serverTimestamp()
-  });
-}

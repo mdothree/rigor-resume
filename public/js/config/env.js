@@ -45,7 +45,7 @@ export const ENABLE_PAYMENTS   = env("VITE_ENABLE_PAYMENTS",     "true") === "tr
 export const FREE_TIER_LIMIT   = parseInt(env("VITE_FREE_TIER_LIMIT", "3"), 10);
 
 // ─── Convenience fetch wrapper (injects API_URL + auth token) ─────────────────
-import { auth } from "./firebase.js";
+import { auth, getAppCheckToken } from "./firebase.js";
 
 export async function apiFetch(path, body, options = {}) {
   const { headers: extraHeaders, timeoutMs = API_TIMEOUT_MS, ...rest } = options;
@@ -62,6 +62,10 @@ export async function apiFetch(path, body, options = {}) {
       // proceed without token (public endpoint)
     }
   }
+
+  // App Check token (only when enabled in config/firebase.js; off by default).
+  const appCheckToken = await getAppCheckToken();
+  if (appCheckToken) headers["X-Firebase-AppCheck"] = appCheckToken;
 
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), timeoutMs);

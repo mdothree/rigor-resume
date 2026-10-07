@@ -87,30 +87,9 @@ export async function getUserProfile(userId) {
   return snap.exists() ? snap.data() : null;
 }
 
-export async function upsertUserProfile(userId, data) {
-  await setDoc(doc(db, "users", userId), {
-    ...data,
-    updatedAt: serverTimestamp()
-  }, { merge: true });
-}
 
-// ─── Usage helpers ────────────────────────────────────────────────────────────
-
-export async function incrementUsage(userId, action) {
-  const month = new Date().toISOString().slice(0, 7);
-  const ref = doc(db, "usage", `${userId}_${month}`);
-  await setDoc(ref, {
-    [action]: (await getUsageCount(userId, action)) + 1,
-    userId, month,
-    updatedAt: serverTimestamp()
-  }, { merge: true });
-}
-
-export async function getUsageCount(userId, action) {
-  const month = new Date().toISOString().slice(0, 7);
-  const snap = await getDoc(doc(db, "usage", `${userId}_${month}`));
-  return snap.exists() ? (snap.data()[action] || 0) : 0;
-}
+// Usage counters (usage/{uid}_{YYYY-MM}) are written only by the rigor API; read
+// them via paymentService.getUsage().
 
 // ─── Timestamp helpers ────────────────────────────────────────────────────────
 
