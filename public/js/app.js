@@ -52,6 +52,7 @@ authService.onAuthChanged(async user => {
 // Upgrade / manage buttons
 document.getElementById("nav-upgrade")?.addEventListener("click", () => showPricingModal("pro"));
 document.getElementById("nav-manage")?.addEventListener("click", () => showPricingModal("pro"));
+document.getElementById("pricing-upgrade-cta")?.addEventListener("click", (e) => { e.preventDefault(); showPricingModal("pro"); });
 
 // ─── Auth modal + nav ─────────────────────────────────────────────────────────
 initAuthModal(authService);
