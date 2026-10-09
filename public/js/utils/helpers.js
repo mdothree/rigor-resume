@@ -284,6 +284,15 @@ export function wireAuthNav(authService, getUser) {
     e.preventDefault();
     openAuthModal("signup");
   });
+  // The nav links are real anchors (#signin / #signup), so they also work when
+  // opened directly, shared, or clicked before this handler attached.
+  const openFromHash = () => {
+    if (getUser()) return;
+    if (location.hash === "#signin") openAuthModal("login");
+    else if (location.hash === "#signup") openAuthModal("signup");
+  };
+  window.addEventListener("hashchange", openFromHash);
+  openFromHash();
 }
 
 // ─── Inline error state (with retry) ─────────────────────────────────────────

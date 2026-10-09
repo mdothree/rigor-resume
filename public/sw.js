@@ -1,6 +1,6 @@
 "use strict";
 
-const CACHE_NAME = "rigor-resume-v4";
+const CACHE_NAME = "rigor-resume-v5"; // bumped: cache-first SW must drop pre-gate HTML/JS (RIGOR-PAY-BEFORE-API)
 const STATIC_ASSETS = [
   "/",
   "/index.html",

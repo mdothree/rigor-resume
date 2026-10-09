@@ -139,12 +139,47 @@ export function attachFieldValidation(inputId, rules, label = "") {
  * @param {import('./toast.js').ToastManager} toast
  * @returns {boolean}
  */
+// Persistent inline message under a field (RIGOR-EMPTY-INPUT-VALIDATION):
+// toasts alone vanish after a few seconds and read as "nothing happened".
+export function setFieldError(inputId, message) {
+  const input = document.getElementById(inputId);
+  if (!input) return;
+  const errId = `${inputId}-error`;
+  let err = document.getElementById(errId);
+  if (!message) {
+    err?.remove();
+    input.classList.remove("input-error");
+    input.removeAttribute("aria-invalid");
+    return;
+  }
+  if (!err) {
+    err = document.createElement("p");
+    err.id = errId;
+    err.className = "field-error";
+    err.setAttribute("role", "alert");
+    input.insertAdjacentElement("afterend", err);
+    // Clear as soon as the user edits the field.
+    input.addEventListener("input", () => setFieldError(inputId, null), { once: true });
+  }
+  err.textContent = message;
+  input.classList.add("input-error");
+  input.setAttribute("aria-invalid", "true");
+  input.setAttribute("aria-describedby", errId);
+}
+
 export function guardSubmit(fields, toast) {
   const results = fields.map(f => ({
     value: document.getElementById(f.id)?.value?.trim() || "",
     rules: f.rules,
     label: f.label || f.id,
   }));
+
+  // Inline message per field (first failing rule), cleared for valid fields.
+  fields.forEach((f, i) => {
+    let msg = null;
+    for (const rule of f.rules || []) { msg = rule(results[i].value, results[i].label); if (msg) break; }
+    setFieldError(f.id, msg);
+  });
 
   const { valid, errors } = validateForm(results);
   if (!valid) {

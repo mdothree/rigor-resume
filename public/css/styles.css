@@ -898,3 +898,13 @@ body {
 
 /* Keep scrolled-to panels clear of the sticky nav */
 #tool, .question-card, .session-complete, .setup-panel, .results, .result-panel, .feedback-panel, .tool-error { scroll-margin-top: 5rem; }
+
+/* ─── Inline field errors (RIGOR-EMPTY-INPUT-VALIDATION) ─────────────────── */
+.field-error { color: #B91C1C; font-size: .85rem; margin: .35rem 0 .5rem; font-weight: 500; }
+.input-error { border-color: #EF4444 !important; box-shadow: 0 0 0 2px rgba(239,68,68,.15); }
+
+/* ─── Pro checkout gate (RIGOR-PAY-BEFORE-API) ───────────────────────────── */
+.pro-notice { margin: 0 1.5rem 1rem; padding: .75rem 1rem; border-radius: 8px; background: #FEF3C7; color: #78350F; font-size: .9rem; line-height: 1.45; border: 1px solid #FCD34D; }
+.pro-notice.hidden { display: none; }
+.plan-btn-soon, .btn-upgrade-nav.pro-soon { opacity: .85; }
+.pro-checking { color: #6B7280; font-size: .9rem; padding: 1rem; }

@@ -1,4 +1,7 @@
-import { STRIPE_KEY, STRIPE_PRO_PRICE_ID, STRIPE_TEAM_PRICE_ID, apiFetch } from "../config/env.js";
+import {
+  STRIPE_KEY, STRIPE_PRO_PRICE_ID, STRIPE_TEAM_PRICE_ID, apiFetch,
+  PRO_CHECKOUT_ENABLED, apiReachable
+} from "../config/env.js";
 
 /**
  * paymentService.js
@@ -100,7 +103,20 @@ export async function checkLimit(userId, action, limit) {
 }
 
 // ─── Stripe Embedded Checkout (Payment Element) ───────────────────────────────
+// Thrown when checkout must not open (flag off, or the API is unreachable).
+export class CheckoutUnavailableError extends Error {
+  constructor(message, reason) { super(message); this.name = "CheckoutUnavailableError"; this.reason = reason; }
+}
+
 export async function mountEmbeddedCheckout(containerId, priceId, userId) {
+  // RIGOR-PAY-BEFORE-API: never load Stripe or create a session while Pro
+  // checkout is off, or when the API that would serve the plan is unreachable.
+  if (!PRO_CHECKOUT_ENABLED) {
+    throw new CheckoutUnavailableError("Pro checkout isn't open yet.", "disabled");
+  }
+  if (!(await apiReachable())) {
+    throw new CheckoutUnavailableError("Checkout is temporarily unavailable because the Rigor service can't be reached.", "unreachable");
+  }
   const stripe = await getStripe();
 
   // Get client secret from the API. apiFetch adds API_URL + the Firebase ID token;

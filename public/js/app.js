@@ -1,6 +1,7 @@
 import { authService } from "./services/authService.js";
 import { apiFetch } from "./config/env.js";
 import { toast } from "./utils/toast.js";
+import { validators, guardSubmit } from "./utils/validate.js";
 import { saveDoc, getUserDocs, tsToString } from "./services/firestoreService.js";
 import { initPaywall, gate, showPricingModal, renderUsageMeter } from "./services/paywallUI.js";
 import {
@@ -50,7 +51,7 @@ authService.onAuthChanged(async user => {
 });
 
 // Upgrade / manage buttons
-document.getElementById("nav-upgrade")?.addEventListener("click", () => showPricingModal("pro"));
+document.getElementById("nav-upgrade")?.addEventListener("click", (e) => { e.preventDefault(); showPricingModal("pro"); });
 document.getElementById("nav-manage")?.addEventListener("click", () => showPricingModal("pro"));
 document.getElementById("pricing-upgrade-cta")?.addEventListener("click", (e) => { e.preventDefault(); showPricingModal("pro"); });
 
@@ -139,8 +140,11 @@ async function runAnalysis(resume, jd) {
 async function analyze() {
   const resume = resumeTextArea.value.trim();
   const jd = jobDesc.value.trim();
-  if (!resume) { resumeTextArea.focus(); return toast.warning("Please paste your resume text."); }
-  if (!jd) { jobDesc.focus(); return toast.warning("Please paste the job description."); }
+  // Inline + toast message on empty/too-short input (RIGOR-EMPTY-INPUT-VALIDATION).
+  if (!guardSubmit([
+    { id: "resume-text", rules: [validators.required, validators.minWords(30)], label: "Resume text" },
+    { id: "job-description", rules: [validators.required, validators.minWords(10)], label: "Job description" }
+  ], toast)) return;
 
   if (!currentUser) {
     toast.info("Sign in or create a free account to run an analysis.");

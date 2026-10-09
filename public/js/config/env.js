@@ -44,6 +44,36 @@ export const STRIPE_TEAM_PRICE_ID = isLocalhost
 export const ENABLE_PAYMENTS   = env("VITE_ENABLE_PAYMENTS",     "true") === "true";
 export const FREE_TIER_LIMIT   = parseInt(env("VITE_FREE_TIER_LIMIT", "3"), 10);
 
+// ─── Pro checkout gate (RIGOR-PAY-BEFORE-API) ─────────────────────────────────
+// ONE switch for every Upgrade/Pro CTA (nav button, pricing CTA, paywall modal,
+// usage meter, upgrade banner). While false, those show "Pro — coming soon" and
+// clicking shows an inline notice: no Stripe.js load, no create-embedded-session.
+// Keep false until api.rigor.design is healthy (RIGOR-API-525) and the quota +
+// webhook are verified (Principal decision). To enable, change the default below
+// to "true" (or set VITE_PRO_CHECKOUT_ENABLED / window.__ENV__) and redeploy.
+export const PRO_CHECKOUT_ENABLED = env("VITE_PRO_CHECKOUT_ENABLED", "false") === "true";
+export const PRO_COMING_SOON_LABEL = "Pro — coming soon";
+
+/**
+ * Lightweight reachability probe for the API that paymentService uses.
+ * Sends OPTIONS to the checkout route: withCors (api/_middleware/cors.js) answers
+ * it with 204 before auth or Stripe run, so this never creates a session.
+ * A TLS/origin failure (e.g. Cloudflare 525), CORS failure, non-2xx or timeout → false.
+ */
+export async function apiReachable(timeoutMs = 3000) {
+  const url = `${API_URL}/api/payment/create-embedded-session`;
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), timeoutMs);
+  try {
+    const res = await fetch(url, { method: "OPTIONS", cache: "no-store", signal: controller.signal });
+    return res.ok; // 204 from withCors
+  } catch {
+    return false;
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
 // ─── Convenience fetch wrapper (injects API_URL + auth token) ─────────────────
 import { auth, getAppCheckToken } from "./firebase.js";
 
