@@ -55,5 +55,17 @@
   ],
   "cleanUrls": true,
   "trailingSlash": false,
-  "outputDirectory": "public"
+  "outputDirectory": "public",
+  "redirects": [
+    {
+      "source": "/terms",
+      "destination": "https://mdo3d.com/terms",
+      "permanent": false
+    },
+    {
+      "source": "/privacy",
+      "destination": "https://mdo3d.com/privacy",
+      "permanent": false
+    }
+  ]
 }
