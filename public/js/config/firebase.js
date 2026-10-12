@@ -31,7 +31,7 @@ const DEFAULT_FIREBASE_CONFIG = {
   appId: "1:408387980482:web:d564e195308f4da2553f5b"
 };
 
-const SDK = "https://www.gstatic.com/firebasejs/10.12.0/";
+const SDK = "https://www.gstatic.com/firebasejs/10.14.1/";
 const RUNTIME_ENV = (typeof window !== "undefined" && window.__ENV__) || {};
 const FIREBASE_CONFIG = RUNTIME_ENV.FIREBASE_CONFIG || DEFAULT_FIREBASE_CONFIG;
 
