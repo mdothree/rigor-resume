@@ -933,3 +933,11 @@ body {
   .btn-icon { font-size: .78rem; padding: .35rem .6rem; white-space: nowrap; }
   .plan-badge { margin-left: 0; }
 }
+
+/* A11Y-003 (color-contrast, light theme): panel numbers #E0DDD5 were 1.35:1 on white; large text needs 3:1. */
+@media not all and (prefers-color-scheme: dark) {
+  .panel-num { color: #8C877C; }
+}
+
+/* The decorative hero glow sat above the hero content and swallowed clicks on "Analyze My Resume". */
+.hero::before { pointer-events: none; }
