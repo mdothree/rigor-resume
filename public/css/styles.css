@@ -908,3 +908,12 @@ body {
 .pro-notice.hidden { display: none; }
 .plan-btn-soon, .btn-upgrade-nav.pro-soon { opacity: .85; }
 .pro-checking { color: #6B7280; font-size: .9rem; padding: 1rem; }
+
+/* A11Y-013: 44px minimum tap targets on touch widths */
+@media (max-width: 768px) {
+  .nav-brand, .nav-link, .btn-nav, .btn-upgrade-nav { display: inline-flex; align-items: center; justify-content: center; min-height: 44px; }
+  .nav-link { min-width: 44px; }
+  .btn-primary, .type-btn, .tone-option { min-height: 44px; }
+  .footer-tools { row-gap: 0; }
+  .footer-tools a { display: inline-flex; align-items: center; min-height: 44px; min-width: 44px; }
+}
