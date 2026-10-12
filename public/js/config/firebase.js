@@ -43,7 +43,9 @@ const FIREBASE_CONFIG = RUNTIME_ENV.FIREBASE_CONFIG || DEFAULT_FIREBASE_CONFIG;
 // (do NOT enforce) until metrics show real traffic carries tokens. When enabled,
 // apiFetch (env.js) also sends the token as X-Firebase-AppCheck to the rigor API.
 // CSP note: enabling needs https://www.google.com + https://www.gstatic.com/recaptcha/
-// in script-src and https://www.google.com in frame-src (vercel.json).
+// in script-src, https://www.google.com in frame-src and
+// https://content-firebaseappcheck.googleapis.com in connect-src (vercel.json;
+// connect-src lists exact Firebase hosts, no *.googleapis.com wildcard).
 const APP_CHECK_ENABLED = String(RUNTIME_ENV.VITE_FIREBASE_APPCHECK_ENABLED || "") === "true";
 const APP_CHECK_SITE_KEY = RUNTIME_ENV.VITE_FIREBASE_APPCHECK_SITE_KEY || "";
 
