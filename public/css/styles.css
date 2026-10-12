@@ -651,7 +651,7 @@ body {
 /* Skip to content link */
 .skip-link {
   position: absolute; top: -100%; left: 1rem;
-  background: var(--primary, #10B981); color: #fff;
+  background: #1E3A5F; color: #fff;
   padding: .5rem 1rem; border-radius: 8px;
   font-weight: 700; text-decoration: none;
   z-index: 9999;
