@@ -917,3 +917,19 @@ body {
   .footer-tools { row-gap: 0; }
   .footer-tools a { display: inline-flex; align-items: center; min-height: 44px; min-width: 44px; }
 }
+
+/* MOBILE-WARN: header nav on one row at phone widths (375/390). Tighter gaps and
+   padding, smaller brand, and the Pro pill shows only "Pro" (its full text, e.g.
+   "Pro — coming soon" or the JS-set checkout label, stays as the accessible name).
+   44px tap-target minimums from A11Y-013 are kept. Wrap stays as a fallback. */
+@media (max-width: 400px) {
+  .nav { gap: .5rem; padding: .75rem 1rem; }
+  .nav-brand { font-size: 1.15rem; flex-shrink: 0; white-space: nowrap; }
+  .nav-links { gap: .35rem; }
+  .nav-link { font-size: .85rem; white-space: nowrap; }
+  .btn-nav { padding: .4rem .7rem; font-size: .82rem; white-space: nowrap; }
+  .btn-upgrade-nav { font-size: 0; padding: 0 .65rem; min-width: 44px; white-space: nowrap; }
+  .btn-upgrade-nav::before { content: "Pro"; content: "Pro" / ""; font-size: .8rem; }
+  .btn-icon { font-size: .78rem; padding: .35rem .6rem; white-space: nowrap; }
+  .plan-badge { margin-left: 0; }
+}
