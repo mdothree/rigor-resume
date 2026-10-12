@@ -60,14 +60,14 @@
         <button class="tab-btn" data-tab="signup">Sign Up</button>
       </div>
       <div class="tab-content" id="tab-login">
-        <input type="email" class="input" id="login-email" placeholder="Email" />
-        <input type="password" class="input" id="login-password" placeholder="Password" />
+        <input type="email" class="input" id="login-email" name="email" autocomplete="email" aria-label="Email" required placeholder="Email" />
+        <input type="password" class="input" id="login-password" name="password" autocomplete="current-password" aria-label="Password" required placeholder="Password" />
         <button class="btn-primary full" id="btn-login" aria-label="Sign in to your account">Sign In</button>
       </div>
       <div class="tab-content hidden" id="tab-signup">
-        <input type="text" class="input" id="signup-name" placeholder="Full Name" />
-        <input type="email" class="input" id="signup-email" placeholder="Email" />
-        <input type="password" class="input" id="signup-password" placeholder="Password" />
+        <input type="text" class="input" id="signup-name" name="name" autocomplete="name" aria-label="Full name" placeholder="Full Name" />
+        <input type="email" class="input" id="signup-email" name="email" autocomplete="email" aria-label="Email" required placeholder="Email" />
+        <input type="password" class="input" id="signup-password" name="password" autocomplete="new-password" aria-label="Password (at least 6 characters)" minlength="6" required placeholder="Password" />
         <button class="btn-primary full" id="btn-signup" aria-label="Create a new account">Create Account</button>
       </div>
       <p class="auth-error hidden" id="auth-error"></p>
