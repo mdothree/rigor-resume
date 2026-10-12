@@ -4,16 +4,19 @@
  * Provides: save, getAll, getById, update, remove, subscribeToCollection
  */
 
-import { db } from "../config/firebase.js";
-import {
-  collection, doc, addDoc, getDoc, getDocs, setDoc, updateDoc,
-  deleteDoc, query, where, orderBy, limit, onSnapshot,
-  serverTimestamp, Timestamp
-} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { loadFirebase } from "../config/firebase.js";
+
+// PERF-003: Firestore is lazy. Each call awaits the SDK (loaded once); if it can't
+// load, the call rejects into the caller's try/catch, as a Firestore error did.
+async function fs() {
+  const { db, fsM } = await loadFirebase();
+  return { db, ...fsM };
+}
 
 // ─── Core CRUD ────────────────────────────────────────────────────────────────
 
 export async function saveDoc(collectionName, userId, data) {
+  const { db, collection, addDoc, serverTimestamp } = await fs();
   const ref = await addDoc(collection(db, collectionName), {
     userId,
     ...data,
@@ -24,6 +27,7 @@ export async function saveDoc(collectionName, userId, data) {
 }
 
 export async function updateDoc_(collectionName, docId, data) {
+  const { db, doc, updateDoc, serverTimestamp } = await fs();
   await updateDoc(doc(db, collectionName, docId), {
     ...data,
     updatedAt: serverTimestamp()
@@ -31,11 +35,13 @@ export async function updateDoc_(collectionName, docId, data) {
 }
 
 export async function getDoc_(collectionName, docId) {
+  const { db, doc, getDoc } = await fs();
   const snap = await getDoc(doc(db, collectionName, docId));
   return snap.exists() ? { id: snap.id, ...snap.data() } : null;
 }
 
 export async function deleteDoc_(collectionName, docId) {
+  const { db, doc, deleteDoc } = await fs();
   await deleteDoc(doc(db, collectionName, docId));
 }
 
@@ -43,6 +49,7 @@ export async function deleteDoc_(collectionName, docId) {
 
 export async function getUserDocs(collectionName, userId, options = {}) {
   const { orderByField = "createdAt", orderDir = "desc", limitTo = 50 } = options;
+  const { db, collection, query, where, orderBy, limit, getDocs } = await fs();
   const q = query(
     collection(db, collectionName),
     where("userId", "==", userId),
@@ -54,6 +61,7 @@ export async function getUserDocs(collectionName, userId, options = {}) {
 }
 
 export async function getUserDocsByField(collectionName, userId, field, value) {
+  const { db, collection, query, where, orderBy, getDocs } = await fs();
   const q = query(
     collection(db, collectionName),
     where("userId", "==", userId),
@@ -66,23 +74,31 @@ export async function getUserDocsByField(collectionName, userId, field, value) {
 
 // ─── Real-time ────────────────────────────────────────────────────────────────
 
+// Returns an unsubscribe function synchronously (the listener attaches once the SDK loads).
 export function subscribeToUserDocs(collectionName, userId, callback, options = {}) {
   const { orderByField = "createdAt", orderDir = "desc", limitTo = 50 } = options;
-  const q = query(
-    collection(db, collectionName),
-    where("userId", "==", userId),
-    orderBy(orderByField, orderDir),
-    limit(limitTo)
-  );
-  return onSnapshot(q, snap => {
-    const docs = snap.docs.map(d => ({ id: d.id, ...d.data() }));
-    callback(docs);
-  });
+  let cancelled = false;
+  let unsub = null;
+  fs().then(({ db, collection, query, where, orderBy, limit, onSnapshot }) => {
+    if (cancelled) return;
+    const q = query(
+      collection(db, collectionName),
+      where("userId", "==", userId),
+      orderBy(orderByField, orderDir),
+      limit(limitTo)
+    );
+    unsub = onSnapshot(q, snap => {
+      const docs = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+      callback(docs);
+    });
+  }).catch(e => console.warn("[firestore] subscribe failed:", e?.message));
+  return () => { cancelled = true; if (unsub) unsub(); };
 }
 
 // ─── User profile ─────────────────────────────────────────────────────────────
 
 export async function getUserProfile(userId) {
+  const { db, doc, getDoc } = await fs();
   const snap = await getDoc(doc(db, "users", userId));
   return snap.exists() ? snap.data() : null;
 }
@@ -95,7 +111,7 @@ export async function getUserProfile(userId) {
 
 export function tsToDate(ts) {
   if (!ts) return null;
-  if (ts instanceof Timestamp) return ts.toDate();
+  if (typeof ts?.toDate === "function") return ts.toDate(); // Firestore Timestamp
   if (ts?.seconds) return new Date(ts.seconds * 1000);
   return new Date(ts);
 }

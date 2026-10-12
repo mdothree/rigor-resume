@@ -9,10 +9,9 @@ import {
  * Uses Stripe Embedded Elements (Payment Element) — no redirect needed
  */
 
-import { auth, db } from "../config/firebase.js";
-import {
-  doc, getDoc, onSnapshot
-} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+// PERF-003: Firestore is lazy (config/firebase.js). Subscription reads fall back
+// to free on any failure; usage reads reject, so gate() blocks (fails closed).
+import { loadFirebase } from "../config/firebase.js";
 
 // ─── Plan config (update keys per project) ──────────────────────────────────
 export const PLANS = {
@@ -67,6 +66,7 @@ function normalizeSub(data) {
 
 export async function getSubscription(userId) {
   try {
+    const { db, fsM: { doc, getDoc } } = await loadFirebase();
     const snap = await getDoc(doc(db, "subscriptions", userId));
     return normalizeSub(snap.exists() ? snap.data() : null);
   } catch {
@@ -74,10 +74,17 @@ export async function getSubscription(userId) {
   }
 }
 
+// Returns an unsubscribe function synchronously (the listener attaches once the SDK loads).
 export function onSubscriptionChange(userId, callback) {
-  return onSnapshot(doc(db, "subscriptions", userId), snap => {
-    callback(normalizeSub(snap.exists() ? snap.data() : null));
-  });
+  let cancelled = false;
+  let unsub = null;
+  loadFirebase().then(({ db, fsM: { doc, onSnapshot } }) => {
+    if (cancelled) return;
+    unsub = onSnapshot(doc(db, "subscriptions", userId), snap => {
+      callback(normalizeSub(snap.exists() ? snap.data() : null));
+    });
+  }).catch(e => console.warn("[subscription] listener failed:", e?.message));
+  return () => { cancelled = true; if (unsub) unsub(); };
 }
 
 export async function isPro(userId) {
@@ -90,6 +97,7 @@ export async function isPro(userId) {
 // firestore.rules deny client writes to usage/.
 export async function getUsage(userId, action) {
   const month = new Date().toISOString().slice(0, 7);
+  const { db, fsM: { doc, getDoc } } = await loadFirebase();
   const snap = await getDoc(doc(db, "usage", `${userId}_${month}`));
   return snap.exists() ? (snap.data()[action] || 0) : 0;
 }

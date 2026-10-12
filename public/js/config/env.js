@@ -75,15 +75,17 @@ export async function apiReachable(timeoutMs = 3000) {
 }
 
 // ─── Convenience fetch wrapper (injects API_URL + auth token) ─────────────────
-import { auth, getAppCheckToken } from "./firebase.js";
+import { loadFirebase, getAppCheckToken } from "./firebase.js";
 
 export async function apiFetch(path, body, options = {}) {
   const { headers: extraHeaders, timeoutMs = API_TIMEOUT_MS, ...rest } = options;
   const url = API_URL ? `${API_URL}${path}` : path;
   const headers = { "Content-Type": "application/json", ...extraHeaders };
 
-  // Attach Firebase auth token if user is logged in
-  const user = auth.currentUser;
+  // Attach Firebase auth token if user is logged in (SDK is lazy: PERF-003;
+  // if it can't load there is no signed-in user to attach).
+  const fb = await loadFirebase().catch(() => null);
+  const user = fb?.auth.currentUser;
   if (user) {
     try {
       const token = await user.getIdToken();
