@@ -1,11 +1,12 @@
 "use strict";
 
-const CACHE_NAME = "rigor-resume-v7"; // bumped: cache-first SW must pick up the #94 paid-from-first-use paywall JS
+const CACHE_NAME = "rigor-resume-v8"; // bumped: Q7 paid path (checkout on, /success confirms access)
 const STATIC_ASSETS = [
   "/",
   "/index.html",
   "/css/styles.css",
   "/js/app.js",
+  "/js/success.js",
   "/js/config/firebase.js",
   "/js/config/env.js",
   "/js/services/authService.js",

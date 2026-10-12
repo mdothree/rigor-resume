@@ -27,14 +27,17 @@ export const PLANS = {
   },
   pro: {
     name: "Pro",
-    priceId: STRIPE_PRO_PRICE_ID || "__STRIPE_PRO_PRICE_ID__",
-    price: 9.99,
+    priceId: STRIPE_PRO_PRICE_ID || "pro",
+    price: 9.99, // must equal the Stripe price the API sells (RIGOR_GO.sh checks 999 USD/month)
     limits: { analyses: Infinity, saves: Infinity },
-    features: ["Unlimited uses", "Full results", "Save history", "Priority AI", "Export PDF"]
+    // Honest claims: only what the tools do today.
+    features: ["Unlimited use of all 7 Rigor career tools", "Full AI results", "Cancel anytime from Manage Plan"]
   },
   team: {
     name: "Team",
-    priceId: STRIPE_TEAM_PRICE_ID || "__STRIPE_TEAM_PRICE_ID__",
+    priceId: STRIPE_TEAM_PRICE_ID || "",
+    // Q7: no Team price exists and its features are not built: hidden until both are real.
+    hidden: !STRIPE_TEAM_PRICE_ID,
     price: 29.99,
     limits: { analyses: Infinity, saves: Infinity },
     features: ["Everything in Pro", "5 team members", "Team dashboard", "API access"]
@@ -43,10 +46,12 @@ export const PLANS = {
 
 // ─── Stripe loader ────────────────────────────────────────────────────────────
 let _stripe = null;
-async function getStripe() {
+async function getStripe(publishableKey) {
   if (_stripe) return _stripe;
+  const key = STRIPE_KEY || publishableKey;
+  if (!key) throw new CheckoutUnavailableError("Checkout isn't configured yet. Nothing was charged.", "unconfigured");
   await loadScript("https://js.stripe.com/v3/");
-  _stripe = Stripe(STRIPE_KEY || "__STRIPE_PUBLISHABLE_KEY__");
+  _stripe = Stripe(key);
   return _stripe;
 }
 
@@ -133,12 +138,11 @@ export async function mountEmbeddedCheckout(containerId, priceId, userId) {
   if (!(await apiReachable())) {
     throw new CheckoutUnavailableError("Checkout is temporarily unavailable because the Rigor service can't be reached.", "unreachable");
   }
-  const stripe = await getStripe();
-
-  // Get client secret from the API. apiFetch adds API_URL + the Firebase ID token;
-  // the server derives the user from the token (the userId arg is no longer sent).
-  const { clientSecret } = await apiFetch("/api/payment/create-embedded-session", { priceId });
+  // Get client secret (+ publishable key, Q7) from the API. apiFetch adds API_URL +
+  // the Firebase ID token; the server derives the user from the token.
+  const { clientSecret, publishableKey } = await apiFetch("/api/payment/create-embedded-session", { priceId });
   if (!clientSecret) throw new Error("Failed to initialize checkout");
+  const stripe = await getStripe(publishableKey);
 
   const checkout = await stripe.initEmbeddedCheckout({ clientSecret });
   checkout.mount(`#${containerId}`);
