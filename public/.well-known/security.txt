@@ -1,0 +1,4 @@
+Contact: mailto:security@rigor.design
+Expires: 2027-10-12T00:00:00Z
+Preferred-Languages: en
+Canonical: https://resume.rigor.design/.well-known/security.txt
