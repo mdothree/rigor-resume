@@ -13,7 +13,7 @@ import { PRO_CHECKOUT_ENABLED, PRO_COMING_SOON_LABEL } from "../config/env.js";
 
 // Honest copy while Pro checkout is off (RIGOR-PAY-BEFORE-API).
 const PRO_NOTICE = "Rigor Pro isn't available to buy yet. Checkout opens once the Pro service is live. " +
-  "The free plan (3 uses a month) works now, and nothing can be charged here.";
+  "The Basic plan (3 uses a month) works now, and nothing can be charged here.";
 const UNREACHABLE_NOTICE = "Checkout is temporarily unavailable because the Rigor service can't be reached. " +
   "Nothing was charged. Please try again later.";
 
@@ -109,7 +109,7 @@ export function showPricingModal(highlightPlan = "pro") {
             ${key === highlightPlan && PRO_CHECKOUT_ENABLED ? '<div class="popular-badge">Most Popular</div>' : ''}
             ${_subscription.plan === key ? '<div class="current-badge">Current Plan</div>' : ''}
             <div class="plan-name">${plan.name}</div>
-            <div class="plan-price">${plan.price === 0 ? 'Free' : `$${plan.price}<span>/mo</span>`}</div>
+            <div class="plan-price">${plan.price === 0 ? '$0' : `$${plan.price}<span>/mo</span>`}</div>
             <ul class="plan-features">
               ${plan.features.map(f => `<li>✓ ${f}</li>`).join("")}
             </ul>
@@ -197,8 +197,8 @@ export function showUpgradePrompt(action, used, limit) {
     <div class="upgrade-content">
       <div class="upgrade-icon">🚀</div>
       <div class="upgrade-text">
-        <strong>You've used ${used} of ${limit} free ${action}s this month</strong>
-        <p>${PRO_CHECKOUT_ENABLED ? "Upgrade to Pro for unlimited access — just $9.99/mo" : "Your free uses reset next month. Unlimited Pro is coming soon."}</p>
+        <strong>You've used ${used} of ${limit} included ${action}s this month</strong>
+        <p>${PRO_CHECKOUT_ENABLED ? "Upgrade to Pro for unlimited access — just $9.99/mo" : "Your included uses reset next month. Unlimited Pro is coming soon."}</p>
       </div>
       <button type="button" class="upgrade-cta" id="upgrade-cta-btn" data-pro-cta data-pro-label="Upgrade to Pro">${PRO_CHECKOUT_ENABLED ? "Upgrade to Pro" : PRO_COMING_SOON_LABEL}</button>
       <button class="upgrade-dismiss" id="upgrade-dismiss-btn">&times;</button>

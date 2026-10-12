@@ -147,7 +147,7 @@ async function analyze() {
   ], toast)) return;
 
   if (!currentUser) {
-    toast.info("Sign in or create a free account to run an analysis.");
+    toast.info("Sign in or create an account to run an analysis.");
     openAuthModal("login");
     return;
   }
