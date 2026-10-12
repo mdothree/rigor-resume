@@ -18,8 +18,7 @@ function env(key, fallback = "") {
 const isLocalhost = typeof window !== "undefined" &&
   (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1");
 
-// The AI handlers live in the separate rigor-api project (projects/rigor/api),
-// documented as https://api.rigor.design (.env.example, PROJECTS_MASTER.md).
+// The AI handlers are served by https://api.rigor.design.
 // The frontends have no /api folder, so same-origin calls 404 in production.
 // Localhost keeps same-origin ("") unless VITE_API_URL / window.__ENV__ overrides it.
 export const API_URL = env("VITE_API_URL", isLocalhost ? "" : "https://api.rigor.design");
