@@ -1,6 +1,6 @@
 import {
   STRIPE_KEY, STRIPE_PRO_PRICE_ID, STRIPE_TEAM_PRICE_ID, apiFetch,
-  PRO_CHECKOUT_ENABLED, apiReachable
+  PRO_CHECKOUT_ENABLED, apiReachable, INCLUDED_ANALYSES
 } from "../config/env.js";
 
 /**
@@ -10,16 +10,20 @@ import {
  */
 
 // PERF-003: Firestore is lazy (config/firebase.js). Subscription reads fall back
-// to free on any failure; usage reads reject, so gate() blocks (fails closed).
+// to "no subscription" on any failure; usage reads reject, so gate() blocks (fails closed).
 import { loadFirebase } from "../config/firebase.js";
 
 // ─── Plan config (update keys per project) ──────────────────────────────────
 export const PLANS = {
+  // #94 paid-only: `free` is the internal key for "no active subscription" (the
+  // Stripe webhook and Firestore use it). It is NOT a plan: never shown in the
+  // pricing modal, and its allowance is INCLUDED_ANALYSES (0 = paid from first use).
   free: {
-    name: "Basic",
+    name: "No plan",
     price: 0,
-    limits: { analyses: 3, saves: 5 },
-    features: ["3 uses per month", "Basic results", "No history"]
+    hidden: true,
+    limits: { analyses: INCLUDED_ANALYSES, saves: 0 },
+    features: []
   },
   pro: {
     name: "Pro",
@@ -57,7 +61,7 @@ function loadScript(src) {
 
 // ─── Subscription state ───────────────────────────────────────────────────────
 // Same rule as the API (api/lib/quota.js): a paid plan only counts while the
-// Stripe status is active/trialing (past_due/canceled fall back to free limits).
+// Stripe status is active/trialing (past_due/canceled count as no subscription).
 function normalizeSub(data) {
   if (!data) return { plan: "free", status: "none" };
   const active = data.status === "active" || data.status === "trialing";
@@ -85,6 +89,10 @@ export function onSubscriptionChange(userId, callback) {
     });
   }).catch(e => console.warn("[subscription] listener failed:", e?.message));
   return () => { cancelled = true; if (unsub) unsub(); };
+}
+
+export function isPaidPlan(plan) {
+  return plan === "pro" || plan === "team";
 }
 
 export async function isPro(userId) {

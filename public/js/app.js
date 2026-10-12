@@ -152,7 +152,7 @@ async function analyze() {
     return;
   }
 
-  // Gate behind paywall — free users get a limited number of analyses/month
+  // #94: paid from first use: gate() opens the pricing modal unless the user has Pro/Team
   try {
     await gate("analyses", () => runAnalysis(resume, jd));
   } catch (err) {

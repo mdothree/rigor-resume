@@ -312,10 +312,14 @@ export function showToolError(err, onRetry) {
     anchor.insertAdjacentElement("afterend", box);
   }
   const needsAuth = err?.status === 401;
+  const needsPro = err?.code === "subscription_required" || err?.status === 402; // #94
   const msg = needsAuth
     ? "Please sign in to use this tool."
-    : (err?.message || "Something went wrong.");
-  box.innerHTML = `<p class="tool-error-title">${needsAuth ? "Sign-in required" : "We couldn't generate a result"}</p>
+    : needsPro
+      ? "Rigor tools run on a Rigor Pro subscription."
+      : (err?.message || "Something went wrong.");
+  const title = needsAuth ? "Sign-in required" : needsPro ? "Rigor Pro required" : "We couldn't generate a result";
+  box.innerHTML = `<p class="tool-error-title">${title}</p>
     <p class="tool-error-msg">${escapeHtml(msg)}</p>
     <p class="tool-error-note">No results were generated, so nothing is shown below.</p>
     <div class="tool-error-actions"></div>`;
@@ -325,6 +329,13 @@ export function showToolError(err, onRetry) {
     b.className = "btn-primary"; b.type = "button"; b.textContent = "Sign In";
     b.addEventListener("click", () => openAuthModal("login"));
     actions.appendChild(b);
+  }
+  if (needsPro) {
+    const b = document.createElement("button");
+    b.className = "btn-primary"; b.type = "button"; b.textContent = "See Rigor Pro";
+    b.addEventListener("click", () => window.dispatchEvent(new CustomEvent("rigor:subscription-required")));
+    actions.appendChild(b);
+    onRetry = null; // retrying cannot succeed without a subscription
   }
   if (onRetry) {
     const r = document.createElement("button");

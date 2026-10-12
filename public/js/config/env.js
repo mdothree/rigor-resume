@@ -41,7 +41,10 @@ export const STRIPE_TEAM_PRICE_ID = isLocalhost
 
 // ─── Feature flags ────────────────────────────────────────────────────────────
 export const ENABLE_PAYMENTS   = env("VITE_ENABLE_PAYMENTS",     "true") === "true";
-export const FREE_TIER_LIMIT   = parseInt(env("VITE_FREE_TIER_LIMIT", "3"), 10);
+// #94 paid-only: AI uses per month WITHOUT an active Pro/Team subscription.
+// Mirrors INCLUDED_ANALYSES in the rigor API (api/lib/quota.js), which enforces it.
+// 0 = paid from first use (promo codes at checkout are the early-access lever).
+export const INCLUDED_ANALYSES = 0;
 
 // ─── Pro checkout gate (RIGOR-PAY-BEFORE-API) ─────────────────────────────────
 // ONE switch for every Upgrade/Pro CTA (nav button, pricing CTA, paywall modal,
@@ -121,8 +124,18 @@ export async function apiFetch(path, body, options = {}) {
 
   if (!res.ok) {
     const data = await res.json().catch(() => ({}));
-    const err = new Error(data.error || `Request failed (HTTP ${res.status})`);
+    // #94: 402 {error:"subscription_required", checkout:true} = no active Pro plan.
+    const subscriptionRequired = res.status === 402 && (data.checkout === true || data.error === "subscription_required");
+    const err = new Error(subscriptionRequired
+      ? (data.message || "Rigor Pro is required to use this tool.")
+      : (data.error || `Request failed (HTTP ${res.status})`));
     err.status = res.status;
+    if (subscriptionRequired) {
+      err.code = "subscription_required";
+      err.checkout = true;
+      // paywallUI.js listens for this and opens the pricing modal.
+      if (typeof window !== "undefined") window.dispatchEvent(new CustomEvent("rigor:subscription-required"));
+    }
     throw err;
   }
   // Returns the parsed JSON body. Callers must NOT call .json() again.
