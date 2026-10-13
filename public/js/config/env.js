@@ -54,18 +54,24 @@ export const PRO_CHECKOUT_ENABLED = env("VITE_PRO_CHECKOUT_ENABLED", "false") ==
 export const PRO_COMING_SOON_LABEL = "Pro — coming soon";
 
 /**
- * Lightweight reachability probe for the API that paymentService uses.
- * Sends OPTIONS to the checkout route: withCors (api/_middleware/cors.js) answers
- * it with 204 before auth or Stripe run, so this never creates a session.
- * A TLS/origin failure (e.g. Cloudflare 525), CORS failure, non-2xx or timeout → false.
+ * apiReachable(): the truthful API signal (L-RES-03). GET ${API_URL}/health on the rigor
+ * API answers 200 {ok:true} only when every required env var is set, the Stripe key modes
+ * match and Firebase Admin initializes; otherwise 503 {ok:false, checks}. Checkout opens
+ * only on ok === true. A network/TLS failure (e.g. Cloudflare 525), CORS failure, non-2xx,
+ * non-JSON body, ok !== true or timeout → false, so checkout fails closed. It needs the API
+ * build whose /health sends CORS for the rigor.design origins (rigor-api q7/paid-path);
+ * against an older API it stays false. This site's own deployment stamp is /health.json
+ * (static, built by scripts/health-stamp.mjs); it does not check the API.
  */
 export async function apiReachable(timeoutMs = 3000) {
-  const url = `${API_URL}/api/payment/create-embedded-session`;
+  const url = `${API_URL}/health`;
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), timeoutMs);
   try {
-    const res = await fetch(url, { method: "OPTIONS", cache: "no-store", signal: controller.signal });
-    return res.ok; // 204 from withCors
+    const res = await fetch(url, { method: "GET", cache: "no-store", credentials: "omit", signal: controller.signal });
+    if (!res.ok) return false;
+    const body = await res.json().catch(() => null);
+    return !!(body && body.ok === true);
   } catch {
     return false;
   } finally {

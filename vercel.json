@@ -1,5 +1,6 @@
 {
   "version": 2,
+  "buildCommand": "node scripts/health-stamp.mjs",
   "headers": [
     {
       "source": "/(.*)",
@@ -49,6 +50,15 @@
         {
           "key": "Cache-Control",
           "value": "public, max-age=86400, stale-while-revalidate=604800"
+        }
+      ]
+    },
+    {
+      "source": "/health.json",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "no-store"
         }
       ]
     }
