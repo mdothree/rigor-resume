@@ -76,6 +76,26 @@
       "source": "/privacy",
       "destination": "https://mdo3d.com/privacy",
       "permanent": false
+    },
+    {
+      "source": "/refund",
+      "destination": "https://mdo3d.com/refund",
+      "permanent": false
+    },
+    {
+      "source": "/cancellation",
+      "destination": "https://mdo3d.com/cancellation",
+      "permanent": false
+    },
+    {
+      "source": "/acceptable-use",
+      "destination": "https://mdo3d.com/acceptable-use",
+      "permanent": false
+    },
+    {
+      "source": "/contact",
+      "destination": "https://mdo3d.com/contact",
+      "permanent": false
     }
   ]
 }
