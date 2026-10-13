@@ -1,6 +1,6 @@
 "use strict";
 
-const CACHE_NAME = "rigor-resume-v6"; // bumped: cache-first SW must drop pre-gate HTML/JS (RIGOR-PAY-BEFORE-API)
+const CACHE_NAME = "rigor-resume-v7"; // bumped: cache-first SW must pick up the VISUAL-QA dark-theme CSS
 const STATIC_ASSETS = [
   "/",
   "/index.html",
