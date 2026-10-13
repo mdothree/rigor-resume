@@ -941,3 +941,12 @@ body {
 
 /* The decorative hero glow sat above the hero content and swallowed clicks on "Analyze My Resume". */
 .hero::before { pointer-events: none; }
+
+/* VISUAL-QA 2026-10-13 (dark theme): navy #1E3A5F text (brand, panel and section titles) was ~1.7:1 on the
+   dark surfaces and the panel numbers #30363D were 1.4:1, so "rigor.design" and "01 …" read as dark-on-dark. */
+@media (prefers-color-scheme: dark) {
+  .nav-brand, .nav-link:hover, .tab-btn.active, .panel-header h2, .upload-label,
+  .section-header h2, .history-title, .result-toolbar h3, .complete-card h2 { color: var(--text); }
+  .strategy-card h4, .profile-score, .footer-tools a { color: var(--gold); }
+  .panel-num { color: #6E7681; }
+}
