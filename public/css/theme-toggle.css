@@ -1,0 +1,25 @@
+/* theme-toggle.css — MDOThree shared template (theme toggle part of site-chrome.css, mdothree-text go-final-r4).
+   44x44 icon button, innermost/rightmost in the nav. Carries its own tokens so it contrasts in both themes.
+     light  #0F172A on #FFFFFF = 17:1, border #64748B on #FFFFFF = 4.8:1 (non-text >= 3:1)
+     dark   #F1F5F9 on #111827 = 16:1, border #94A3B8 on #111827 = 6.9:1 */
+:root, html[data-theme="light"] {
+  --mdo-c-fg: #0F172A; --mdo-c-bg: #FFFFFF; --mdo-c-surface: #F1F5F9; --mdo-c-border: #64748B; --mdo-c-focus: #047857;
+}
+html[data-theme="dark"] {
+  --mdo-c-fg: #F1F5F9; --mdo-c-bg: #111827; --mdo-c-surface: #1E293B; --mdo-c-border: #94A3B8; --mdo-c-focus: #34D399;
+}
+html[data-theme="light"] { color-scheme: light; }
+html[data-theme="dark"] { color-scheme: dark; }
+.mdo-theme {
+  display: inline-flex; align-items: center; justify-content: center; flex: 0 0 auto;
+  width: 44px; min-width: 44px; height: 44px; padding: 0; margin: 0;
+  border: 1.5px solid var(--mdo-c-border); border-radius: 10px;
+  background: var(--mdo-c-bg); color: var(--mdo-c-fg);
+  font: inherit; line-height: 1; cursor: pointer; transition: border-color 160ms, background 160ms;
+  -webkit-appearance: none; appearance: none; box-shadow: none;
+}
+.mdo-theme:hover { background: var(--mdo-c-surface); }
+.mdo-theme:focus-visible { outline: 3px solid var(--mdo-c-focus); outline-offset: 2px; }
+.mdo-theme .mdo-i { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+html[data-theme="dark"] .mdo-theme .mdo-i-moon,
+html:not([data-theme="dark"]) .mdo-theme .mdo-i-sun { display: none; }
