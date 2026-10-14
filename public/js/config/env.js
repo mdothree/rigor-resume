@@ -55,11 +55,12 @@ export const INCLUDED_ANALYSES = 0;
 // Keep false until api.rigor.design is healthy (RIGOR-API-525) and the quota +
 // webhook are verified (Principal decision). To enable, change the default below
 // to "true" (or set VITE_PRO_CHECKOUT_ENABLED / window.__ENV__) and redeploy.
-// Q7 (Principal: "fix it, not take it down"): ON in the q7/paid-path build, which ships
-// only after api.rigor.design/health is 200 (RIGOR_GO.sh). Even when on, checkout opens
+// Q7 (Principal: "fix it, not take it down"): OFF by default (window-4 split, 2026-10-14): the tools ship
+// on their own while api.rigor.design is not verified. RIGOR_GO.sh turns it ON in the deployed copy
+// only after api.rigor.design/health is 200. Even when on, checkout opens
 // only if the API answers (apiReachable) because the API creates the Stripe session:
 // there is no way to pay while the API is down.
-export const PRO_CHECKOUT_ENABLED = env("VITE_PRO_CHECKOUT_ENABLED", "true") === "true";
+export const PRO_CHECKOUT_ENABLED = env("VITE_PRO_CHECKOUT_ENABLED", "false") === "true";
 export const PRO_COMING_SOON_LABEL = "Pro — coming soon";
 
 /**
