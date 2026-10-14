@@ -244,7 +244,7 @@ export function showUpgradePrompt(action, used, limit) {
     ? `You've used ${used} of ${limit} ${action} this month`
     : "This tool is part of Rigor Pro";
   const detail = PRO_CHECKOUT_ENABLED
-    ? "Get unlimited use with Rigor Pro for $9.99/mo. Early-access promo codes are accepted at checkout."
+    ? "Get unlimited use with Rigor Pro for $10/mo. Early-access promo codes are accepted at checkout."
     : "Rigor Pro opens soon. Checkout isn't open yet, so nothing can be charged.";
   banner.innerHTML = `
     <div class="upgrade-content">

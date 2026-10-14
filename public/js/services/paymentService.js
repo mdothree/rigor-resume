@@ -28,7 +28,7 @@ export const PLANS = {
   pro: {
     name: "Pro",
     priceId: STRIPE_PRO_PRICE_ID || "pro",
-    price: 9.99, // must equal the Stripe price the API sells (RIGOR_GO.sh checks 999 USD/month)
+    price: 10, // must equal the Stripe price the API sells (RIGOR_GO.sh checks 1000 USD cents/month; decision 2026-10-14)
     limits: { analyses: Infinity, saves: Infinity },
     // Honest claims: only what the tools do today.
     features: ["Unlimited use of all 7 Rigor career tools", "Full AI results", "Cancel anytime from Manage Plan"]
@@ -38,7 +38,7 @@ export const PLANS = {
     priceId: STRIPE_TEAM_PRICE_ID || "",
     // Q7: no Team price exists and its features are not built: hidden until both are real.
     hidden: !STRIPE_TEAM_PRICE_ID,
-    price: 29.99,
+    price: 30, // placeholder only: Team is hidden and has no Stripe price (flat whole dollars, no *.99)
     limits: { analyses: Infinity, saves: Infinity },
     features: ["Everything in Pro", "5 team members", "Team dashboard", "API access"]
   }
