@@ -80,7 +80,7 @@ body {
 .modal-tabs { display: flex; gap: .5rem; margin-bottom: 1.5rem; border-bottom: 2px solid var(--gray-100); }
 .tab-btn {
   background: none; border: none; padding: .6rem 1rem;
-  font-size: 1rem; font-weight: 500; cursor: pointer; color: var(--gray-400);
+  font-size: 1rem; font-weight: 500; cursor: pointer; color: var(--gray-700); /* A11Y-002: inactive tab was #9E9A90 on white (2.7:1) */
   border-bottom: 2px solid transparent; margin-bottom: -2px; transition: all .2s;
 }
 .tab-btn.active { color: var(--navy); border-bottom-color: var(--gold); }
