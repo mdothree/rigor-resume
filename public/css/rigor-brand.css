@@ -33,7 +33,9 @@ body.rg .hero{background:var(--y-bg);color:var(--y-fg);text-align:left;max-width
 body.rg .hero::before{content:none}
 body.rg .hero-badge{grid-column:1;background:none;border:0;border-radius:0;padding:0;margin:0;color:var(--y-mute);font-family:var(--y-ui);font-size:12px;font-weight:600;letter-spacing:.14em}
 body.rg .hero-title{grid-column:1;font-family:var(--y-ui);font-weight:700;font-size:clamp(2.6rem,5.4vw,4.6rem);line-height:.98;letter-spacing:-.04em;margin:0}
-body.rg .hero-title em{font-family:var(--y-body);font-style:italic;font-weight:400;color:var(--y-accent);letter-spacing:-.01em}
+body.rg .hero-title em{font-style:normal;color:var(--y-accent)}
+/* No italics (Principal 10-16): emphasis by colour. */
+body.rg em,body.rg i,body.rg cite,body.rg q,body.rg blockquote{font-style:normal}
 body.rg .hero-sub{grid-column:1;margin:0;max-width:32em;opacity:1;font-family:var(--y-body);font-size:21px;line-height:1.5}
 body.rg .hero-cta{grid-column:1;justify-self:start}
 body.rg .hero-stats{grid-column:2;grid-row:1/5;align-self:end;flex-direction:column;gap:0;margin:0;padding:0;border:0;border-top:1px solid var(--y-rule)}
