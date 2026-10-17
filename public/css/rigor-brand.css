@@ -1,0 +1,234 @@
+/* Rigor, yellow-and-black look (Principal 2026-10-16: "the yellow and black one you have for mdo3d might
+   work for rigor"). Loaded after styles.css; every rule is scoped to body.rg so it wins over the shared
+   light/dark rules without touching them. Class names and IDs the JS uses are unchanged.
+   Black #0E0D0C, warm ink #EEE8DD, one yellow #E2B13C. Inter Tight headings, EB Garamond reading text,
+   JetBrains Mono numbers. Radius <= 4px, no pills, full borders only, no emoji. */
+body.rg{
+  --y-bg:#0E0D0C; --y-surface:#161513; --y-raise:#1C1A18; --y-fg:#EEE8DD; --y-mute:#A39C91; --y-rule:#2A2724; --y-rule-strong:#47423C;
+  --y-accent:#E2B13C; --y-accent-hover:#ECC260; --y-on-accent:#0E0D0C; --y-miss:#E58A6B; --y-ok:#7FBF8F;
+  --y-ui:"Inter Tight",system-ui,-apple-system,sans-serif; --y-body:"EB Garamond",Georgia,serif; --y-mono:"JetBrains Mono",ui-monospace,monospace;
+  --y-r:3px;
+  background:var(--y-bg); color:var(--y-fg); font-family:var(--y-ui); color-scheme:dark;
+}
+html:has(body.rg){background:#0E0D0C}
+body.rg ::selection{background:var(--y-accent);color:var(--y-on-accent)}
+body.rg :focus-visible{outline:2px solid var(--y-accent);outline-offset:2px}
+
+/* nav */
+body.rg .nav{background:rgba(14,13,12,.94);backdrop-filter:none;border-bottom:1px solid var(--y-rule);padding:0 48px;height:68px}
+body.rg .nav-brand{display:flex;align-items:center;gap:10px;font-family:var(--y-ui);font-weight:700;font-size:18px;letter-spacing:-.02em;color:var(--y-fg)}
+body.rg .brand-mark{width:26px;height:26px;border:1.5px solid var(--y-accent);border-radius:2px;display:inline-grid;place-items:center;color:var(--y-accent);font:700 14px/1 var(--y-ui)}
+body.rg .nav-sub{font-weight:500;color:var(--y-mute);font-size:15px;letter-spacing:0}
+body.rg .nav-link{color:var(--y-fg);font-family:var(--y-ui);font-size:12.5px;font-weight:600;letter-spacing:.1em;text-transform:uppercase}
+body.rg .nav-link:hover{color:var(--y-accent)}
+body.rg .btn-nav{background:var(--y-accent);color:var(--y-on-accent);border-radius:var(--y-r);font-family:var(--y-ui);font-weight:600;font-size:13.5px;padding:.6rem 1rem}
+body.rg .btn-nav:hover{background:var(--y-accent-hover)}
+body.rg .btn-upgrade-nav{background:transparent;color:var(--y-mute);border:1px solid var(--y-rule-strong);border-radius:var(--y-r);font-family:var(--y-ui);font-size:12.5px;font-weight:600;box-shadow:none}
+body.rg .btn-upgrade-nav::before{content:none}
+body.rg .plan-badge{border-radius:2px}
+body.rg .btn-icon{border-radius:var(--y-r)}
+
+/* hero: left-aligned, no gradient or glow */
+body.rg .hero{background:var(--y-bg);color:var(--y-fg);text-align:left;max-width:1200px;margin:0 auto;padding:80px 48px 56px;display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,.7fr);gap:24px 64px;align-items:end;border-bottom:1px solid var(--y-rule)}
+body.rg .hero::before{content:none}
+body.rg .hero-badge{grid-column:1;background:none;border:0;border-radius:0;padding:0;margin:0;color:var(--y-mute);font-family:var(--y-ui);font-size:12px;font-weight:600;letter-spacing:.14em}
+body.rg .hero-title{grid-column:1;font-family:var(--y-ui);font-weight:700;font-size:clamp(2.6rem,5.4vw,4.6rem);line-height:.98;letter-spacing:-.04em;margin:0}
+body.rg .hero-title em{font-style:normal;color:var(--y-accent)}
+/* No italics (Principal 10-16): emphasis by colour. */
+body.rg em,body.rg i,body.rg cite,body.rg q,body.rg blockquote{font-style:normal}
+body.rg .hero-sub{grid-column:1;margin:0;max-width:32em;opacity:1;font-family:var(--y-body);font-size:21px;line-height:1.5}
+body.rg .hero-cta{grid-column:1;justify-self:start}
+body.rg .hero-stats{grid-column:2;grid-row:1/5;align-self:end;flex-direction:column;gap:0;margin:0;padding:0;border:0;border-top:1px solid var(--y-rule)}
+body.rg .stat{flex-direction:row;justify-content:space-between;align-items:baseline;padding:14px 0;border-bottom:1px solid var(--y-rule)}
+body.rg .stat strong{font-family:var(--y-ui);font-weight:700;font-size:20px;color:var(--y-fg);letter-spacing:-.01em}
+body.rg .stat span{opacity:1;color:var(--y-mute);font-family:var(--y-ui);font-size:12px;font-weight:600;letter-spacing:.12em}
+
+/* buttons */
+body.rg .btn-primary{background:var(--y-accent);color:var(--y-on-accent);border:1px solid var(--y-accent);border-radius:var(--y-r);font-family:var(--y-ui);font-weight:600;box-shadow:none;transform:none}
+body.rg .btn-primary:hover{background:var(--y-accent-hover);border-color:var(--y-accent-hover);box-shadow:none;transform:none}
+body.rg .btn-secondary{background:transparent;color:var(--y-fg);border:1px solid var(--y-rule-strong);border-radius:var(--y-r);font-family:var(--y-ui);font-weight:600}
+body.rg .btn-secondary:hover{background:transparent;color:var(--y-fg);border-color:var(--y-fg)}
+
+/* tool */
+body.rg .tool-section{max-width:1200px;padding:56px 48px 72px}
+body.rg .tool-container{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:20px}
+body.rg .tool-actions,body.rg .results,body.rg #usage-meter-container{grid-column:1/-1}
+body.rg .tool-actions{text-align:left}
+body.rg .tool-panel{background:var(--y-surface);border:1px solid var(--y-rule);border-radius:var(--y-r);box-shadow:none;padding:24px}
+body.rg .panel-header{gap:12px;margin-bottom:18px;padding-bottom:14px;border-bottom:1px solid var(--y-rule)}
+body.rg .panel-num{font-family:var(--y-mono);font-size:13px;font-weight:500;color:var(--y-accent)}
+body.rg .panel-header h2{font-family:var(--y-ui);font-weight:700;font-size:20px;letter-spacing:-.015em;color:var(--y-fg)}
+body.rg .input{background:var(--y-bg);border:1px solid var(--y-rule-strong);border-radius:var(--y-r);color:var(--y-fg);font-family:var(--y-ui);font-size:15px}
+body.rg .input::placeholder{color:#7D766C}
+body.rg .input:focus{background:var(--y-bg);border-color:var(--y-accent)}
+body.rg .textarea{min-height:180px}
+body.rg .textarea.tall{min-height:332px}
+body.rg .drop-zone{border:1px dashed var(--y-rule-strong);border-radius:var(--y-r);background:transparent;padding:22px}
+body.rg .drop-zone:hover,body.rg .drop-zone.drag-over{border-color:var(--y-accent);background:rgba(226,177,60,.05)}
+body.rg .drop-icon{font-size:0;margin-bottom:8px}
+body.rg .drop-icon svg{width:26px;height:26px;stroke:var(--y-accent);fill:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+body.rg .drop-zone p{color:var(--y-fg);font-size:15px}
+body.rg .upload-label{color:var(--y-accent)}
+body.rg .drop-hint{color:var(--y-mute);font-size:13px}
+body.rg .input-note{color:var(--y-mute)}
+
+/* results */
+body.rg .score-card{background:var(--y-surface);color:var(--y-fg);border:1px solid var(--y-rule);border-radius:var(--y-r);padding:24px 28px}
+body.rg .ring-bg{stroke:var(--y-rule)}
+body.rg .ring-fill{stroke:var(--y-accent);stroke-linecap:butt}
+body.rg .score-value{font-family:var(--y-ui);font-weight:700;letter-spacing:-.03em}
+body.rg .score-meta h3{font-family:var(--y-ui);font-weight:700;letter-spacing:-.015em}
+body.rg .score-meta p{opacity:1;color:var(--y-mute);font-family:var(--y-body);font-size:17px}
+body.rg .result-block{background:var(--y-surface);border:1px solid var(--y-rule);border-radius:var(--y-r);box-shadow:none}
+body.rg .result-block h4{font-family:var(--y-ui);color:var(--y-mute);font-size:12px;font-weight:600;letter-spacing:.14em}
+body.rg .result-block ul li{font-family:var(--y-body);font-size:17px;color:var(--y-fg)}
+body.rg .result-block ul li::before{color:var(--y-accent)}
+body.rg .tag{background:transparent;color:var(--y-fg);border:1px solid var(--y-rule-strong);border-radius:2px;font-family:var(--y-ui);font-size:13px;padding:3px 8px}
+body.rg #keywords-block .tag{border-color:rgba(229,138,107,.55)}
+body.rg .pro-box{margin-top:20px;padding:22px 24px;border:1px solid var(--y-rule);border-radius:var(--y-r);background:var(--y-surface);display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap}
+body.rg .pro-box h4{font-family:var(--y-ui);font-weight:700;font-size:18px;color:var(--y-fg);margin:0 0 2px}
+body.rg .pro-box p{font-family:var(--y-body);font-size:17px;color:var(--y-mute);margin:0}
+
+/* history, modals, paywall, toasts */
+body.rg .section-header h2{font-family:var(--y-ui);font-weight:700;color:var(--y-fg);letter-spacing:-.02em}
+body.rg .history-card{background:var(--y-surface);border:1px solid var(--y-rule);border-radius:var(--y-r);box-shadow:none}
+body.rg .history-card:hover{transform:none;border-color:var(--y-fg);box-shadow:none}
+body.rg .history-score{font-family:var(--y-ui);color:var(--y-accent)}
+body.rg .history-title{color:var(--y-fg)}
+body.rg .modal,body.rg .pricing-modal{background:var(--y-surface);color:var(--y-fg);border:1px solid var(--y-rule-strong);border-radius:4px;box-shadow:none}
+body.rg .modal-overlay,body.rg .pricing-overlay{background:rgba(5,5,4,.78);backdrop-filter:none}
+body.rg .tab-btn.active{color:var(--y-fg);border-bottom-color:var(--y-accent)}
+body.rg .pricing-card{border:1px solid var(--y-rule-strong);border-radius:4px;background:var(--y-bg)}
+body.rg .pricing-card.highlighted{border-color:var(--y-accent);box-shadow:none}
+body.rg .popular-badge,body.rg .current-badge{border-radius:2px}
+body.rg .pricing-header{border-bottom-color:var(--y-rule)}
+body.rg .pricing-header h2{font-family:var(--y-ui);color:var(--y-fg)}
+body.rg .plan-btn{border-radius:var(--y-r)}
+body.rg .pro-notice{background:var(--y-bg);color:var(--y-fg);border:1px solid var(--y-rule-strong);border-radius:var(--y-r)}
+body.rg .usage-bar,body.rg .usage-fill{border-radius:1px}
+body.rg .usage-fill{background:var(--y-accent)}
+body.rg .upgrade-prompt{border-radius:var(--y-r)}
+body.rg .toast{border-radius:var(--y-r)}
+body.rg .tool-error{background:var(--y-surface);border:1px solid var(--y-miss);border-radius:var(--y-r);color:var(--y-fg)}
+
+/* footer */
+body.rg .footer{background:var(--y-bg);color:var(--y-mute);border-top:1px solid var(--y-rule);font-family:var(--y-ui);font-size:13.5px;text-align:left;max-width:1200px;margin:24px auto 0;padding:28px 48px 48px;display:grid;gap:10px}
+body.rg .footer-tools,body.rg .footer-legal{justify-content:flex-start;margin:0}
+body.rg .footer-tools a{color:var(--y-fg);font-weight:600}
+body.rg .footer-tools a:hover{color:var(--y-accent);text-decoration:none}
+body.rg .footer-legal a{color:var(--y-mute)}
+
+@media (max-width:860px){
+  body.rg .hero{grid-template-columns:1fr;padding:48px 16px 40px}
+  body.rg .hero-stats{grid-column:1;grid-row:auto}
+  body.rg .tool-container{grid-template-columns:1fr}
+  body.rg .tool-section{padding:40px 16px 56px}
+  body.rg .nav{padding:0 16px}
+  body.rg .footer{padding:24px 16px 40px}
+  body.rg .textarea.tall{min-height:220px}
+}
+@media (max-width:640px){
+  body.rg .nav-sub{display:none}
+  body.rg .hero-cta{justify-self:stretch}
+  body.rg .btn-primary.large{width:100%}
+}
+body.rg .upgrade-icon{display:none}
+
+/* ── Rigor family layer (2026-10-17 build, Principal: "we're clear to build those") ─────────────
+   Ports the approved resume look to every Rigor tool. CSS only: no ID, class, JS or link changes.
+   1. The look is dark only. The live theme toggle switched shared tokens between light and dark;
+      inside body.rg both themes now resolve to the same Rigor tokens, so the toggle is hidden and
+      every legacy var() (panels, cards, modals, pricing, toasts) renders on the black ground. */
+body.rg,
+html[data-theme] body.rg:not(.mdothree-theme):not(.ronnascanner-theme){
+  --navy:#1C1A18; --navy-light:#24221F; --gold:#E2B13C; --gold-light:#ECC260;
+  --white:#161513; --off-white:#0E0D0C; --gray-100:#1C1A18; --gray-200:#2A2724; --gray-400:#A39C91; --gray-700:#C9C2B6;
+  --text:#EEE8DD; --radius:3px; --shadow:none; --shadow-lg:none;
+}
+html[data-theme]:has(body.rg){color-scheme:dark;background:#0E0D0C}
+body.rg .mdo-theme{display:none}
+
+/* 2. Type: Inter Tight for UI and headings, EB Garamond for reading text, JetBrains Mono for numbers. */
+body.rg h1,body.rg h2,body.rg h3,body.rg h4,body.rg h5{font-family:var(--y-ui);color:var(--y-fg);letter-spacing:-.015em}
+body.rg .nav-brand span:not(.brand-mark):not(.nav-sub){color:inherit}
+body.rg .hero:not(:has(.hero-stats)){grid-template-columns:minmax(0,1fr)}
+body.rg .field-label{font-family:var(--y-ui);color:var(--y-mute);font-size:12px;font-weight:600;letter-spacing:.12em}
+body.rg .input-note,body.rg .result-note,body.rg .word-count,body.rg .session-info span,body.rg .score-breakdown{color:var(--y-mute)}
+body.rg .result-note{background:var(--y-bg);border:1px solid var(--y-rule);border-radius:var(--y-r)}
+
+/* 3. Headings and links that used navy text (dark-on-dark on the black ground). */
+body.rg .nav-link:hover,body.rg .tab-btn.active,body.rg .panel-header h2,body.rg .section-header h2,body.rg .history-title,
+body.rg .result-toolbar h3,body.rg .complete-card h2,body.rg .answer-toolbar,body.rg .error-page-code,body.rg .bd-good{color:var(--y-fg)}
+body.rg .strategy-card h4,body.rg .profile-score,body.rg .upload-label{color:var(--y-accent)}
+body.rg .profile-score,body.rg .feedback-score,body.rg .final-score,body.rg .score-value,body.rg .range-val,body.rg .history-score{font-family:var(--y-mono);font-weight:500;letter-spacing:-.02em}
+body.rg .feedback-score,body.rg .final-score{color:var(--y-accent)}
+
+/* 4. Panels and cards: one surface, full even 1px borders, corners <= 4px, no shadow, no gradient. */
+body.rg .tool-panel,body.rg .result-panel,body.rg .answer-panel,body.rg .feedback-panel,body.rg .complete-card,body.rg .strategy-card,
+body.rg .salary-range-card,body.rg .question-card,body.rg .payment-status-card{background:var(--y-surface);color:var(--y-fg);border:1px solid var(--y-rule);border-radius:var(--y-r);box-shadow:none}
+body.rg .salary-range-card .range-header h3,body.rg .question-text{font-family:var(--y-ui);color:var(--y-fg);opacity:1}
+body.rg .question-tip,body.rg .range-label,body.rg .range-assessment,body.rg .range-disclaimer{color:var(--y-mute);opacity:1}
+body.rg .range-note{color:var(--y-accent)}
+body.rg .range-item.highlight{background:rgba(226,177,60,.08);border:1px solid rgba(226,177,60,.35);border-radius:2px}
+body.rg .range-bar,body.rg .cat-score-bar,body.rg .progress-bar{background:var(--y-rule);border-radius:1px}
+body.rg .range-fill,body.rg .cat-fill,body.rg .progress-fill{border-radius:1px}
+body.rg .range-fill.low{background:#5A544C}
+body.rg .range-fill.mid{background:#8A8378}
+body.rg .range-fill.high{background:var(--y-fg)}
+body.rg .range-fill.target,body.rg .progress-fill{background:var(--y-accent)}
+body.rg .strategy-card blockquote{border:1px solid var(--y-rule);border-radius:var(--y-r);padding:12px 16px;background:var(--y-bg);font-family:var(--y-body);font-size:17px;color:var(--y-fg)}
+body.rg .strategy-card ul li,body.rg .feedback-block p,body.rg .cover-letter-output,body.rg .optimized-text{font-family:var(--y-body);font-size:17px}
+body.rg .strategy-card ul li::before{color:var(--y-accent)}
+body.rg .cover-letter-output{color:var(--y-fg);background:var(--y-bg);border:1px solid var(--y-rule-strong);border-radius:var(--y-r)}
+body.rg .cover-letter-output:focus{border-color:var(--y-accent)}
+body.rg .email-subject-line{background:var(--y-bg);border:1px solid var(--y-rule);border-radius:var(--y-r);color:var(--y-fg)}
+body.rg .feedback-block{background:var(--y-bg);border:1px solid var(--y-rule);border-radius:var(--y-r)}
+body.rg .feedback-block.positive,body.rg .feedback-block.improve,body.rg .feedback-block.example{background:var(--y-bg)}
+body.rg .feedback-block h5{font-family:var(--y-ui);font-size:12px;font-weight:600;letter-spacing:.12em}
+body.rg .feedback-block.positive h5{color:var(--y-ok)}
+body.rg .feedback-block.improve h5{color:var(--y-miss)}
+body.rg .feedback-block.example h5{color:var(--y-accent)}
+body.rg .complete-icon{display:none}
+body.rg .q-type-badge{background:transparent;color:var(--y-accent);border:1px solid rgba(226,177,60,.5);border-radius:2px;font-family:var(--y-ui);font-weight:600}
+
+/* 5. Choice chips (email type, tone): square-cornered, yellow when chosen. */
+body.rg .type-btn,body.rg .tone-option span{background:transparent;color:var(--y-fg);border:1px solid var(--y-rule-strong);border-radius:var(--y-r);font-family:var(--y-ui);font-weight:600}
+body.rg .type-btn:hover,body.rg .tone-option:hover span{border-color:var(--y-fg)}
+body.rg .type-btn.active,body.rg .tone-option input:checked + span{background:var(--y-accent);color:var(--y-on-accent);border-color:var(--y-accent)}
+body.rg .tone-option input{accent-color:var(--y-accent)}
+
+/* 6. Small controls, badges, skeletons, auth, pricing and status pages. */
+body.rg .btn-icon{background:transparent;color:var(--y-fg);border:1px solid var(--y-rule-strong);border-radius:var(--y-r);font-family:var(--y-ui);font-weight:600}
+body.rg .btn-icon:hover{background:transparent;border-color:var(--y-fg)}
+body.rg .btn-secondary.small{border-radius:var(--y-r)}
+body.rg .plan-badge,body.rg .popular-badge,body.rg .current-badge,body.rg .q-type-badge{border-radius:2px}
+body.rg .skeleton,body.rg .skeleton-card,body.rg .skeleton-row,body.rg .skeleton-title{border-radius:2px}
+body.rg .skip-link{border-radius:2px;background:var(--y-accent);color:var(--y-on-accent)}
+body.rg .auth-error,body.rg .field-error{color:var(--y-miss)}
+body.rg .input-error{border-color:var(--y-miss)}
+body.rg .pricing-modal{border-radius:4px}
+body.rg .pricing-header p,body.rg .pricing-footer,body.rg .pricing-footer p,body.rg .plan-features li,body.rg .plan-price span{color:var(--y-mute)}
+body.rg .plan-name,body.rg .plan-price{color:var(--y-fg);font-family:var(--y-ui)}
+body.rg .plan-btn,body.rg .upgrade-btn,body.rg .upgrade-cta,body.rg .manage-btn,body.rg .free-btn{border-radius:var(--y-r)}
+body.rg .upgrade-prompt{background:var(--y-surface);color:var(--y-fg);border:1px solid var(--y-rule-strong);border-radius:var(--y-r)}
+body.rg .usage-label,body.rg .usage-unlimited{color:var(--y-mute)}
+body.rg .usage-upgrade{color:var(--y-accent)}
+body.rg #stripe-checkout-mount{border-radius:var(--y-r)}
+body.rg .toast{background:var(--y-raise);color:var(--y-fg);border:1px solid var(--y-rule-strong);border-radius:var(--y-r);box-shadow:none}
+body.rg .toast-error{border-color:var(--y-miss)}
+body.rg .toast-success{border-color:var(--y-ok)}
+body.rg .toast-warning,body.rg .toast-info{border-color:var(--y-accent)}
+body.rg .tool-error{border:1px solid var(--y-miss);border-radius:var(--y-r)}
+body.rg .error-page p,body.rg .payment-status-card p{color:var(--y-mute)}
+body.rg .footer-legal a{text-decoration:underline;text-underline-offset:2px}
+
+/* 7. Layout: tools whose inputs sit in a .two-col (salary, networking, cover) or a setup panel
+      (interview) use the full grid width; a lone panel spans both columns. Phones: one column that
+      never grows past the viewport. */
+body.rg .tool-container > :not(.tool-panel),
+body.rg .tool-container:has(> .two-col) > *{grid-column:1/-1}
+body.rg .two-col{gap:20px}
+@media (max-width:860px){
+  body.rg .hero,body.rg .tool-container,body.rg .two-col{grid-template-columns:minmax(0,1fr)}
+  body.rg .hero-title{font-size:clamp(2.1rem,9vw,2.6rem);overflow-wrap:break-word}
+}
