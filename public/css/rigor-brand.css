@@ -221,3 +221,14 @@ body.rg .toast-warning,body.rg .toast-info{border-color:var(--y-accent)}
 body.rg .tool-error{border:1px solid var(--y-miss);border-radius:var(--y-r)}
 body.rg .error-page p,body.rg .payment-status-card p{color:var(--y-mute)}
 body.rg .footer-legal a{text-decoration:underline;text-underline-offset:2px}
+
+/* 7. Layout: tools whose inputs sit in a .two-col (salary, networking, cover) or a setup panel
+      (interview) use the full grid width; a lone panel spans both columns. Phones: one column that
+      never grows past the viewport. */
+body.rg .tool-container > :not(.tool-panel),
+body.rg .tool-container:has(> .two-col) > *{grid-column:1/-1}
+body.rg .two-col{gap:20px}
+@media (max-width:860px){
+  body.rg .hero,body.rg .tool-container,body.rg .two-col{grid-template-columns:minmax(0,1fr)}
+  body.rg .hero-title{font-size:clamp(2.1rem,9vw,2.6rem);overflow-wrap:break-word}
+}
