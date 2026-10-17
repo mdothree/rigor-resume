@@ -957,3 +957,9 @@ body {
 .error-page-code { opacity: 1; color: var(--navy); }
 html[data-theme="dark"] .error-page-code { color: var(--gold); }
 html[data-theme="dark"] .payment-status-card p, html[data-theme="dark"] .error-page p { color: var(--gray-700); }
+
+/* Legal + contact strip (MDO P1 2026-10-14). Pages live on mdo3d.com. */
+.footer-legal { display: flex; flex-wrap: wrap; justify-content: center; gap: .5rem 1.25rem; margin-bottom: .75rem; font-size: .875rem; }
+.footer-legal a { color: var(--navy); text-decoration: underline; text-underline-offset: 2px; }
+html[data-theme="dark"] .footer-legal a { color: var(--gold); }
+@media (max-width: 768px) { .footer-legal { row-gap: 0; } .footer-legal a { display: inline-flex; align-items: center; min-height: 44px; min-width: 44px; } }
