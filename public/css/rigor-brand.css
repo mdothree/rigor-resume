@@ -133,3 +133,91 @@ body.rg .footer-legal a{color:var(--y-mute)}
   body.rg .btn-primary.large{width:100%}
 }
 body.rg .upgrade-icon{display:none}
+
+/* ── Rigor family layer (2026-10-17 build, Principal: "we're clear to build those") ─────────────
+   Ports the approved resume look to every Rigor tool. CSS only: no ID, class, JS or link changes.
+   1. The look is dark only. The live theme toggle switched shared tokens between light and dark;
+      inside body.rg both themes now resolve to the same Rigor tokens, so the toggle is hidden and
+      every legacy var() (panels, cards, modals, pricing, toasts) renders on the black ground. */
+body.rg,
+html[data-theme] body.rg:not(.mdothree-theme):not(.ronnascanner-theme){
+  --navy:#1C1A18; --navy-light:#24221F; --gold:#E2B13C; --gold-light:#ECC260;
+  --white:#161513; --off-white:#0E0D0C; --gray-100:#1C1A18; --gray-200:#2A2724; --gray-400:#A39C91; --gray-700:#C9C2B6;
+  --text:#EEE8DD; --radius:3px; --shadow:none; --shadow-lg:none;
+}
+html[data-theme]:has(body.rg){color-scheme:dark;background:#0E0D0C}
+body.rg .mdo-theme{display:none}
+
+/* 2. Type: Inter Tight for UI and headings, EB Garamond for reading text, JetBrains Mono for numbers. */
+body.rg h1,body.rg h2,body.rg h3,body.rg h4,body.rg h5{font-family:var(--y-ui);color:var(--y-fg);letter-spacing:-.015em}
+body.rg .nav-brand span:not(.brand-mark):not(.nav-sub){color:inherit}
+body.rg .hero:not(:has(.hero-stats)){grid-template-columns:minmax(0,1fr)}
+body.rg .field-label{font-family:var(--y-ui);color:var(--y-mute);font-size:12px;font-weight:600;letter-spacing:.12em}
+body.rg .input-note,body.rg .result-note,body.rg .word-count,body.rg .session-info span,body.rg .score-breakdown{color:var(--y-mute)}
+body.rg .result-note{background:var(--y-bg);border:1px solid var(--y-rule);border-radius:var(--y-r)}
+
+/* 3. Headings and links that used navy text (dark-on-dark on the black ground). */
+body.rg .nav-link:hover,body.rg .tab-btn.active,body.rg .panel-header h2,body.rg .section-header h2,body.rg .history-title,
+body.rg .result-toolbar h3,body.rg .complete-card h2,body.rg .answer-toolbar,body.rg .error-page-code,body.rg .bd-good{color:var(--y-fg)}
+body.rg .strategy-card h4,body.rg .profile-score,body.rg .upload-label{color:var(--y-accent)}
+body.rg .profile-score,body.rg .feedback-score,body.rg .final-score,body.rg .score-value,body.rg .range-val,body.rg .history-score{font-family:var(--y-mono);font-weight:500;letter-spacing:-.02em}
+body.rg .feedback-score,body.rg .final-score{color:var(--y-accent)}
+
+/* 4. Panels and cards: one surface, full even 1px borders, corners <= 4px, no shadow, no gradient. */
+body.rg .tool-panel,body.rg .result-panel,body.rg .answer-panel,body.rg .feedback-panel,body.rg .complete-card,body.rg .strategy-card,
+body.rg .salary-range-card,body.rg .question-card,body.rg .payment-status-card{background:var(--y-surface);color:var(--y-fg);border:1px solid var(--y-rule);border-radius:var(--y-r);box-shadow:none}
+body.rg .salary-range-card .range-header h3,body.rg .question-text{font-family:var(--y-ui);color:var(--y-fg);opacity:1}
+body.rg .question-tip,body.rg .range-label,body.rg .range-assessment,body.rg .range-disclaimer{color:var(--y-mute);opacity:1}
+body.rg .range-note{color:var(--y-accent)}
+body.rg .range-item.highlight{background:rgba(226,177,60,.08);border:1px solid rgba(226,177,60,.35);border-radius:2px}
+body.rg .range-bar,body.rg .cat-score-bar,body.rg .progress-bar{background:var(--y-rule);border-radius:1px}
+body.rg .range-fill,body.rg .cat-fill,body.rg .progress-fill{border-radius:1px}
+body.rg .range-fill.low{background:#5A544C}
+body.rg .range-fill.mid{background:#8A8378}
+body.rg .range-fill.high{background:var(--y-fg)}
+body.rg .range-fill.target,body.rg .progress-fill{background:var(--y-accent)}
+body.rg .strategy-card blockquote{border:1px solid var(--y-rule);border-radius:var(--y-r);padding:12px 16px;background:var(--y-bg);font-family:var(--y-body);font-size:17px;color:var(--y-fg)}
+body.rg .strategy-card ul li,body.rg .feedback-block p,body.rg .cover-letter-output,body.rg .optimized-text{font-family:var(--y-body);font-size:17px}
+body.rg .strategy-card ul li::before{color:var(--y-accent)}
+body.rg .cover-letter-output{color:var(--y-fg);background:var(--y-bg);border:1px solid var(--y-rule-strong);border-radius:var(--y-r)}
+body.rg .cover-letter-output:focus{border-color:var(--y-accent)}
+body.rg .email-subject-line{background:var(--y-bg);border:1px solid var(--y-rule);border-radius:var(--y-r);color:var(--y-fg)}
+body.rg .feedback-block{background:var(--y-bg);border:1px solid var(--y-rule);border-radius:var(--y-r)}
+body.rg .feedback-block.positive,body.rg .feedback-block.improve,body.rg .feedback-block.example{background:var(--y-bg)}
+body.rg .feedback-block h5{font-family:var(--y-ui);font-size:12px;font-weight:600;letter-spacing:.12em}
+body.rg .feedback-block.positive h5{color:var(--y-ok)}
+body.rg .feedback-block.improve h5{color:var(--y-miss)}
+body.rg .feedback-block.example h5{color:var(--y-accent)}
+body.rg .complete-icon{display:none}
+body.rg .q-type-badge{background:transparent;color:var(--y-accent);border:1px solid rgba(226,177,60,.5);border-radius:2px;font-family:var(--y-ui);font-weight:600}
+
+/* 5. Choice chips (email type, tone): square-cornered, yellow when chosen. */
+body.rg .type-btn,body.rg .tone-option span{background:transparent;color:var(--y-fg);border:1px solid var(--y-rule-strong);border-radius:var(--y-r);font-family:var(--y-ui);font-weight:600}
+body.rg .type-btn:hover,body.rg .tone-option:hover span{border-color:var(--y-fg)}
+body.rg .type-btn.active,body.rg .tone-option input:checked + span{background:var(--y-accent);color:var(--y-on-accent);border-color:var(--y-accent)}
+body.rg .tone-option input{accent-color:var(--y-accent)}
+
+/* 6. Small controls, badges, skeletons, auth, pricing and status pages. */
+body.rg .btn-icon{background:transparent;color:var(--y-fg);border:1px solid var(--y-rule-strong);border-radius:var(--y-r);font-family:var(--y-ui);font-weight:600}
+body.rg .btn-icon:hover{background:transparent;border-color:var(--y-fg)}
+body.rg .btn-secondary.small{border-radius:var(--y-r)}
+body.rg .plan-badge,body.rg .popular-badge,body.rg .current-badge,body.rg .q-type-badge{border-radius:2px}
+body.rg .skeleton,body.rg .skeleton-card,body.rg .skeleton-row,body.rg .skeleton-title{border-radius:2px}
+body.rg .skip-link{border-radius:2px;background:var(--y-accent);color:var(--y-on-accent)}
+body.rg .auth-error,body.rg .field-error{color:var(--y-miss)}
+body.rg .input-error{border-color:var(--y-miss)}
+body.rg .pricing-modal{border-radius:4px}
+body.rg .pricing-header p,body.rg .pricing-footer,body.rg .pricing-footer p,body.rg .plan-features li,body.rg .plan-price span{color:var(--y-mute)}
+body.rg .plan-name,body.rg .plan-price{color:var(--y-fg);font-family:var(--y-ui)}
+body.rg .plan-btn,body.rg .upgrade-btn,body.rg .upgrade-cta,body.rg .manage-btn,body.rg .free-btn{border-radius:var(--y-r)}
+body.rg .upgrade-prompt{background:var(--y-surface);color:var(--y-fg);border:1px solid var(--y-rule-strong);border-radius:var(--y-r)}
+body.rg .usage-label,body.rg .usage-unlimited{color:var(--y-mute)}
+body.rg .usage-upgrade{color:var(--y-accent)}
+body.rg #stripe-checkout-mount{border-radius:var(--y-r)}
+body.rg .toast{background:var(--y-raise);color:var(--y-fg);border:1px solid var(--y-rule-strong);border-radius:var(--y-r);box-shadow:none}
+body.rg .toast-error{border-color:var(--y-miss)}
+body.rg .toast-success{border-color:var(--y-ok)}
+body.rg .toast-warning,body.rg .toast-info{border-color:var(--y-accent)}
+body.rg .tool-error{border:1px solid var(--y-miss);border-radius:var(--y-r)}
+body.rg .error-page p,body.rg .payment-status-card p{color:var(--y-mute)}
+body.rg .footer-legal a{text-decoration:underline;text-underline-offset:2px}
