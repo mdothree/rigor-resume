@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "buildCommand": "node scripts/health-stamp.mjs",
+  "buildCommand": "node scripts/copy-lint.mjs && node scripts/health-stamp.mjs",
   "headers": [
     {
       "source": "/(.*)",

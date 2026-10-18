@@ -1,0 +1,19 @@
+{
+  "allow": [
+    {
+      "file": "public/index.html",
+      "re": "\\$9\\.99/mo",
+      "why": "already fixed on q7/paid-path / deploy/brand-2026-10-17 (9292128, live on resume.rigor.design); main not merged yet"
+    },
+    {
+      "file": "public/js/services/paymentService.js",
+      "re": "price: (9|29)\\.99",
+      "why": "already fixed on q7/paid-path / deploy/brand-2026-10-17 (9292128, live on resume.rigor.design); main not merged yet"
+    },
+    {
+      "file": "public/js/services/paywallUI.js",
+      "re": "\\$9\\.99/mo|'\\$0'",
+      "why": "already fixed on q7/paid-path / deploy/brand-2026-10-17 (9292128, live on resume.rigor.design); main not merged yet"
+    }
+  ]
+}
