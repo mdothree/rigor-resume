@@ -3,7 +3,7 @@
 // CANONICAL COPY: ~/latarence/scripts/copy-lint/copy-lint.mjs. Repos COPY this file (no import, no
 // dependency) to scripts/copy-lint.mjs and wire it as `prebuild` (or the static site's publish step),
 // so a build fails before wrong public copy ships. Re-copy to update; keep the version line in sync.
-// copy-lint version: 2026-10-17.3
+// copy-lint version: 2026-10-17.4
 //
 // Fails (exit 1) on, in public copy:
 //   FREE      the word "free" (paid-only, no free tier, ever; promo codes are the early-access lever)
@@ -45,7 +45,7 @@ const RULES = [
   { id: "ZERO", sev: "fail", re: /\$\s?0(?:\.0{1,2})?(?![\d.,])/, ctx: /(\$\s?0(?:\.0{1,2})?\s*(\/|per\b|a\s+month|\/?\s*(mo|month|yr|year|forever)\b))|\b(price|pricing|plan|tier|starter|personal|basic|hobby|subscription|cost)s?\b/i, msg: "$0 price (balances/totals are fine; price context only)" },
   { id: "NOCARD", sev: "fail", re: /\bno\s+(credit\s+)?card\s+(is\s+)?(required|needed)\b/i, msg: "\"no card required\"" },
   { id: "P99", sev: "fail", re: /(\$\s?\d{1,5}\.99\b|\b(price|amount|cost|monthly|yearly|annual)\w*["']?\s*[:=]\s*["']?\d{1,5}\.99\b|\bdata-price=["']\d{1,5}\.99)/i, msg: ".99 price (prices are round)" },
-  { id: "CODENAME", sev: "fail", re: /(\bAHL\b|Anne\s+Huntington\s+Laborator(y|ies))/, msg: "internal codename AHL / Anne Huntington Laboratory in public copy" },
+  { id: "CODENAME", sev: "fail", re: /(\bAHL\b|Anne\s+Huntington\s+Laborator(y|ies)|[\w.-]@(?:[\w-]+\.)*ahl\.[a-z]{2,}\b|\b(?:[\w-]+\.)+ahl\.(?:bio|com|dev|io|net)\b)/, msg: "internal codename AHL / Anne Huntington Laboratory in public copy" },
   { id: "LLC", sev: "fail", re: /\b((?:[A-Z][\w&.'-]*\s+){0,4}[A-Z][\w&.'-]*,?\s+L\.?L\.?C)\b\.?/, msg: "LLC seller name (DECISIONS 2026-10-15: legal pages name the project; only Huntington Applied's own site names Huntington Applied LLC)", seller: true },
   { id: "DELAWARE", sev: "flag", re: /\bDelaware\b/, msg: "Delaware governing law/venue: flag, pending the Principal's L1 answer (do not change here)" },
 ];
@@ -56,7 +56,7 @@ const MUST_CATCH = {
   ZERO: ["Personal $0/month For individual developers", "Starter $0", "$0 per month", "price: '$0'"],
   NOCARD: ["log a contribution in under ten minutes. No card required.", "No credit card needed"],
   P99: ["Get Premium Names - $2.99", 'data-pro-label="$9.99/mo"', "price: 4.99,", 'data-price="4.99"'],
-  CODENAME: ["Built by AHL", "a project of Anne Huntington Laboratory"],
+  CODENAME: ["Built by AHL", "a project of Anne Huntington Laboratory", "support@sage.ahl.bio", "email support@ahl.com"],
   LLC: ["sold by Butts Studios, LLC", "Runwae Apparel LLC", "© 2026 Butts Technologies, LLC."],
   DELAWARE: ["governed by the laws of the State of Delaware"],
 };
@@ -66,7 +66,7 @@ const MUST_PASS = [
   "Feel free to reach out", "Starter $20/month", "Pro $5.00 per month", "$0.50 per run", "isFree && plan",
   "tier: 'free' | 'pro' | 'enterprise';", "free: true,", "{item.free ? (", "const isPaid = subscription.tier !== 'free';",
   "value: '$0', name: 'Total Earned'", "if (!cents) return '$0';", "solvation free energies", "keep codebases free of corruption", "A free rider is someone",
-  "AHL_API_BASE", "toll-free number", "Google LLC, Gmail (email).", "Plans start at $5", "$100 / $500 / $2,000", "price: 9.90,",
+  "AHL_API_BASE", "support@sagesimulation.com", "toll-free number", "Google LLC, Gmail (email).", "Plans start at $5", "$100 / $500 / $2,000", "price: 9.90,",
 ];
 const findRule = (line, sellers = ["Google LLC", "YouTube LLC"]) => {
   const out = [];
