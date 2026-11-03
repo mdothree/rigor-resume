@@ -1,6 +1,7 @@
 import { authService } from "./services/authService.js";
 import { apiFetch } from "./config/env.js";
 import { toast } from "./utils/toast.js";
+import { normalizeAnalysis, createAnalysisSession } from "./analysisState.js";
 import { validators, guardSubmit } from "./utils/validate.js";
 import { saveDoc, getUserDocs, tsToString } from "./services/firestoreService.js";
 import { initPaywall, gate, showPricingModal, renderUsageMeter } from "./services/paywallUI.js";
@@ -17,6 +18,8 @@ const HISTORY_COLLECTION = "resume-analyses";
 
 // ─── State ───────────────────────────────────────────────────────────────────
 let currentUser = null;
+// FS-NF-01/02: results, history and Save are bound to the analyzed inputs and to the signed-in identity.
+const session = createAnalysisSession();
 
 // ─── DOM ──────────────────────────────────────────────────────────────────────
 const heroCta = document.getElementById("hero-cta");
@@ -32,7 +35,15 @@ const historyGrid = document.getElementById("history-grid");
 
 // ─── Auth State ───────────────────────────────────────────────────────────────
 authService.onAuthChanged(async user => {
+  const hadUser = !!currentUser;
   currentUser = user;
+  if (session.identity(user ? user.uid : null) && hadUser) {
+    // account switched or signed out: nothing from the previous identity may stay visible or saveable
+    results.classList.add("hidden");
+    historyGrid.innerHTML = "";
+    resumeTextArea.value = ""; jobDesc.value = "";
+    updateResumeCounter(); updateJdCounter();
+  }
   const navLogin = document.getElementById("nav-login");
   if (navLogin) navLogin.textContent = user ? "Sign Out" : "Sign In";
   document.getElementById("nav-signup")?.classList.toggle("nav-signup-hidden", !!user);
@@ -124,13 +135,18 @@ async function runAnalysis(resume, jd) {
   clearToolError();
   results.classList.add("hidden");
   setBusy(true);
+  const ticket = session.begin(resume, jd);
   try {
-    const analysis = await apiFetch("/api/analyze", { resume, jobDescription: jd });
+    const raw = await apiFetch("/api/analyze", { resume, jobDescription: jd });
+    if (!session.isCurrent(ticket)) return;            // identity changed while the request was pending
+    const analysis = normalizeAnalysis(raw);            // FS-NF-03: strict contract, no score from a null/empty field
     renderResults(analysis);
+    session.commit(ticket, analysis);                   // FS-NF-01: Save persists exactly what was analyzed
     results.classList.remove("hidden");
     results.scrollIntoView({ behavior: "smooth" });
     renderUsageMeter("usage-meter-container", "analyses")?.catch?.(() => {});
   } catch (err) {
+    if (!session.isCurrent(ticket)) return;
     showToolError(err, () => runAnalysis(resume, jd));
   } finally {
     setBusy(false);
@@ -188,12 +204,13 @@ function renderResults(data) {
 // ─── Save ─────────────────────────────────────────────────────────────────────
 btnSave.addEventListener("click", async () => {
   if (!currentUser) return openAuthModal("login");
-  const score = parseInt(document.getElementById("score-value").textContent, 10);
+  const rec = session.saveable(currentUser.uid);
+  if (!rec) { toast.warning("Run an analysis before saving."); return; }
   try {
-    await saveDoc(HISTORY_COLLECTION, currentUser.uid, {
-      score: Number.isFinite(score) ? score : null,
-      jobSnippet: jobDesc.value.trim().slice(0, 100),
-      resumeSnippet: resumeTextArea.value.trim().slice(0, 100)
+    await saveDoc(HISTORY_COLLECTION, rec.uid, {
+      score: rec.score,
+      jobSnippet: rec.jobSnippet,
+      resumeSnippet: rec.resumeSnippet
     });
     toast.success("Analysis saved!");
     loadHistory();
@@ -205,8 +222,10 @@ btnSave.addEventListener("click", async () => {
 // ─── History ──────────────────────────────────────────────────────────────────
 async function loadHistory() {
   if (!currentUser) return;
+  const ticket = session.ticket();
   try {
     const items = await getUserDocs(HISTORY_COLLECTION, currentUser.uid, { limitTo: 20 });
+    if (ticket.gen !== session.ticket().gen) return;   // another identity is signed in now: do not publish this list
     historyGrid.innerHTML = items.map(item => {
       const snippet = item.jobSnippet || "Job analysis";
       return `
