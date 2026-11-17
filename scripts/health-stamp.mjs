@@ -20,7 +20,7 @@ const stamp = {
   built_at: new Date().toISOString(),
   commit,
   vercel_env: process.env.VERCEL_ENV || null,
-  api_health: 'https://api.rigor.design/health',
+  api_health: 'https://api.rigorcareer.com/health',
 };
 writeFileSync(new URL('public/health.json', root), JSON.stringify(stamp, null, 2) + '\n');
 console.log(`health.json: ${stamp.service} ${stamp.built_at} ${commit || '(no commit)'}`);

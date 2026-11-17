@@ -18,10 +18,10 @@ function env(key, fallback = "") {
 const isLocalhost = typeof window !== "undefined" &&
   (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1");
 
-// The AI handlers are served by https://api.rigor.design.
+// The AI handlers are served by https://api.rigorcareer.com.
 // The frontends have no /api folder, so same-origin calls 404 in production.
 // Localhost keeps same-origin ("") unless VITE_API_URL / window.__ENV__ overrides it.
-export const API_URL = env("VITE_API_URL", isLocalhost ? "" : "https://api.rigor.design");
+export const API_URL = env("VITE_API_URL", isLocalhost ? "" : "https://api.rigorcareer.com");
 
 // Default client-side timeout for AI requests (ms)
 export const API_TIMEOUT_MS = 60000;
@@ -47,7 +47,7 @@ export const FREE_TIER_LIMIT   = parseInt(env("VITE_FREE_TIER_LIMIT", "3"), 10);
 // ONE switch for every Upgrade/Pro CTA (nav button, pricing CTA, paywall modal,
 // usage meter, upgrade banner). While false, those show "Pro — coming soon" and
 // clicking shows an inline notice: no Stripe.js load, no create-embedded-session.
-// Keep false until api.rigor.design is healthy (RIGOR-API-525) and the quota +
+// Keep false until api.rigorcareer.com is healthy (RIGOR-API-525) and the quota +
 // webhook are verified (Principal decision). To enable, change the default below
 // to "true" (or set VITE_PRO_CHECKOUT_ENABLED / window.__ENV__) and redeploy.
 export const PRO_CHECKOUT_ENABLED = env("VITE_PRO_CHECKOUT_ENABLED", "false") === "true";
